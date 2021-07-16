@@ -1,3 +1,12 @@
+## add average anchored solar time to species records
+
+library(maptools)        
+library(dplyr)
+library(activity) 
+library(lubridate)
+
+rm(list = ls())
+
 
 # load function to change clock time to radial time for overlap package
 ClocktimeToTimeRad <- function(Clocktime,
@@ -10,6 +19,18 @@ ClocktimeToTimeRad <- function(Clocktime,
   return(Time.rad)
 }
 
+
+# load data
+records <- read.csv("raw_data/predator_records.csv")
+camdata <- read.csv("raw_data/camdata.csv")
+# remove stupid X's
+camdata <- subset(camdata, select = -c(X, X1))
+records <- subset(records, select = -c(X))
+# merge files
+records <- left_join(records, camdata, by = "station_year")
+
+# date class
+records$date_time <- ymd_hms(records$date_time, tz = "Australia/Brisbane")
 
 
 # ADD SOLAR TIMES FOR DETECTIONS ------------------------------------------
@@ -35,7 +56,16 @@ det_radian <- ClocktimeToTimeRad(records$date_time)
 # we can now calculate the average anchored time (time relative to both sunrise and sunset) for every detection
 det_anchored <- transtime(det_radian, anchors)
 
-# and we can convert radian time back to 24-hour time, where 06:00 represents sunrise and 18:00 sunset
-records$hour_adj <- det_anchored * 3.819719 
-head(records$det_anchored_24)
+# add to dataframe
+records$aa_radian <- det_anchored
+records$sunrise_radian <- sunrise_radian
+records$sunset_radian <- sunset_radian
+# convert back to clock time (new cols)
+records$aa_clock       <- records$aa_radian * 3.81971
+records$sunrise_clock <- records$sunrise_radian * 3.81971
+records$sunset_clock  <- records$sunset_radian * 3.81971
+head(records)
+summary(head(records))
 
+# save 
+write.csv(records, "derived_data/records_solar.csv")
