@@ -44,14 +44,16 @@ table(records$XGROUPNAME)
 
 
 # ADD FOX COUNTS PER CAMERA -----------------------------------------------
-## Single fox count for each cam-trap
+## Single fox count for each cam-trap (and do the same for cats for good measure)
 records <- records %>%
   group_by(station_year)  %>%
-  mutate(fox_count = sum(fox))
+  mutate(fox_count = sum(fox),
+         cat_count = sum(cat))
 
 # fox presence / absence
 records$fox_pa <- if_else(records$fox_count > 0, "present", "absent")
-table(records$fox_pa)
+records$cat_pa <- if_else(records$cat_count > 0, "present", "absent")
+xtabs(~records$fox_pa + records$cat_pa)
 
 # adjust (positive only - we don't want negative counts) fox counts for survey effort 
 records$fox_count_adj <- ifelse(records$fox_count > 0, records$fox_count/log(records$survey_duration), records$fox_count)
@@ -82,6 +84,9 @@ records <- transform(records,
                      survey_duration = as.integer(survey_duration)
 )
 summary(records)
+
+# save modified dataframe
+write.csv(records, "derived_data/counts_hour_cleaned.csv")
 
 
 # GAMS --------------------------------------------------------------------
@@ -237,7 +242,7 @@ plot_range_se <- ggplot(aes(hour, fox_count_adj, fill = se.fit), data = df_int) 
   xlab("Hour") 
 
 # plot / save
-png("figs/cat_fox_count.png", width = 12, height = 8.5, res = 600, units = "in")
+png("figs/cat_fox_count.png", width = 9, height = 6.5, res = 600, units = "in")
 plot_range / plot_range_se + plot_annotation(tag_levels = "A")
 dev.off()
 

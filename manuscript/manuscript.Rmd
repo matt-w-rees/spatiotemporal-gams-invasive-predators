@@ -1,0 +1,251 @@
+---
+title: Dynamic shifts in predator diel activity due to habitat type and fear
+author:
+  - name: Matthew W. Rees
+    email: matt.wayne.rees@gmail.com
+    affiliation: UOM
+    footnote: 1
+  - name: Jack H. Pascoe
+    email: 
+    affiliation: CEC
+  - name: Mark Le Pla
+    email: 
+    affiliation: CEC
+  - name: Emma K. Birnbaum
+    email: 
+    affiliation: CEC
+    footnote: 
+  - name: Alan Robley
+    email: 
+    affiliation: ARI
+  - name: Nick Golding
+    email: 
+    affiliation: CU,TKI
+  - name: Brendan A. Wintle
+    email: 
+    affiliation: UOM
+  - name: Bronwyn A. Hradsky
+    email: 
+    affiliation: UOM
+    footnote: 
+address:
+  - code: UOM
+    address: Quantitative & Applied Ecology Group, School of Ecosystem and Forest Science, The University of Melbourne, Parkville, VIC, Australia
+  - code: CEC 
+    address: Conservation Ecology Centre, Otway Lighthouse Rd, Cape Otway, VIC, Australia
+  - code: ARI 
+    address: Department of Environment, Land, Water and Planning, Arthur Rylah Institute for Environmental Research, Heidelberg, Australia
+  - code: CU 
+    address: Curtin University, Bentley, WA, Australia
+  - code: TKI 
+    address: Telethon Kids Institute, Perth Children's Hospital, Nedlands, WA, Australia
+footnote:
+  - code: 1
+    text: "Corresponding Author"
+abstract: |
+  1. Background.
+  2. Methods.
+  3. Results.
+  4. *Synthesis and applications.* 
+  
+  
+keywords: "daily activity patterns; camera trap; *Felis catus*; invasive predator; interspecific competition; mesopredator release; diel activity; hierarchical generalised additive models; species interactions; *Vulpes vulpes*."
+journal: "Ecography"
+date: "`r Sys.Date()`"
+bibliography: mybibfile.bib
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{float}
+    - \floatplacement{figure}{H}
+linenumbers: true
+#numbersections: true
+csl: ecography.csl
+geometry: margin=1.1in
+fontsize: 12pt
+output:
+  bookdown::pdf_book:
+    base_format: rticles::elsevier_article
+editor_options: 
+  chunk_output_type: console
+---
+\parskip=12pt 
+
+
+\newpage
+
+
+```{r setup, include = FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, cache = FALSE, warning = FALSE, message = FALSE)
+
+```
+
+INTRODUCTION
+==========================
+
+The activity of an animal varies across space and time. 
+Spatial activity is major research focus, however, temporal activity is much less studied. 
+How temporal activity varies across space is even less understood.  
+
+The physical environment and presence of other species shapes animal diel activity. 
+Directly and indirectly.  
+
+Species interactions - coexistence or avoidance - are important to understand for management. 
+Species can avoid other species through spatial and/or temporal avoidance. 
+
+Classic models of diel activity overlap- flawed. 
+No covariates - how does this change across space. 
+Haphazard methods to faciltiate this e.g. (xx). 
+
+GAMs increasingly being used for diel activity (but not necessarily species overlap). 
+Particularly because you can model covariates. 
+However GAMs have  features which lend themselves to this analysis, but have not being used - flexible joint spatial and temporal heirarchical modelling. 
+
+Interactions between invasive predators are important to understand. 
+
+In this study, we...
+
+
+
+\newpage
+
+MATERIALS AND METHODS
+==========================
+
+## Study area
+
+We collated camera-trap data from two distinct regions in south-west Victoria, Australia (Fig. 1). The terrestrial mammalian predator guild is depauperate here. Dingoes *Canis familiaris* are now absent throughout, as is the the tiger quoll *Dasyurus maculatus*, more recently absent in the Otway Ranges (last sighted in 2014 despite extensive camera-trapping). Introduced red foxes and feral cat are therefore the only medium-large functional mammalian terrestrial predators across both regions. Across broad sections of each region, government land managers conduct ongoing targeted fox control for biodiversity conservation - poison baits containing 3 mg of sodium mono-fluroacetate (1080) are buried at a depth of 10 cm at 1-km intervals along accessible forest tracks and roads. The purpose of each  collated camera-trap study was to to experimentally survey changes in the mammalian community due to fox control, and so, our study covers a wide range contexts with and without fox-baiting. 
+
+In the Glenelg region, Gunditjmara country, natural vegetation has been highly fragmented. Here, camera-survey sites were situated in six distinct forest blocks; two of which separated by a river, others separated by mostly pastoral farming and residential property). Foxes in three forests blocks have been subject to lethal control since October 2005, with 1080 poison-baits replaced fortnightly [@ROBLEY2014262]. 
+
+The Otway Ranges, Gadubanud and XX country, is a largely continuous patch of natural vegetation with a strong east-west rainfall and elevation gradient [@swan2021species]. Foxes are controlled through 1080 poison-baits with monthly replacement across most of the Otway Ranges (a large section to the north-west remains unbaited). The majority of this baiting began in 2016 - 2017, although fox-baiting commenced in some small sections in 2008. 
+
+Alongside fragmentation, the extremely rugged, wet forest and rainforest matrix in the western Otway Ranges is the main difference between the two regions. Prescribed fire, primarily for the purpose of asset protection, is another key management action undertaken throughout both regions (except in very wet sections of Otway Ranges). 
+
+ 
+## Camera-trapping surveys
+
+We compiled camera-trap data from four distinct survey across these regions. After removing camera-traps which were operational for less than 14 days, this totalled 4276 deployments of camera-traps at 1527 camera-trap sites. Survey durations ranged between 14 and 93 days (mean 43), totalling 183,678 trapnights. The number of sites, deployments and trapnights were nearly equal across both regions. Camera-trap were deployed in the Glenelg region between 2013 – 2019, whereas in the Otway Ranges surveys were conducted in 2016 – 2019. Camera-trap spacing was highly variable; with minimum distance between sites ranging between 40 - 4150 m (mean: 597 m).
+
+All camera-trap deployments consisted of a Reconyx (Holmen, Wisconsin) brand camera-trap (both white and infrared flashes), attached to a tree or a metal picket, facing a lure. Camera-traps were set-up in two ways depending on the key aim of the project, either targeted toward predators or prey species. One study across both regions positioned camera-traps lower on a tree (around 15 - 30 cm above the ground – angled only slightly downwards) facing a tuna oil lure approximately 2 - 2.5 m away [detailed in @REES2019108287]. The remaining camera-traps were positioned higher on a tree or a metal picket (at least 40 cm above ground) and angled downwards more strongly - facing a lure approximately 1 - 1.5 m away. These lures consisted of peanut butter, golden syrup and rolled oats were mixed into a small ball, placed within a tea strainer or PVC pipe container and secured either to the ground, or 20 - 60 cm above ground on a wooden stake. All set-ups were effective in detecting both predator and prey species.  
+
+## Data preparation
+We first created a table of species detections and deployment information (coordinates, dates) for every camera-trap deployment in R version 3.6.3 [@R]. We discarded camera-traps which were active for less than 14 days. We fit lorelograms using methods provided by @https://doi.org/10.1111/2041-210X.13308 to identify that removing repeat site detections of a species within 30 minutes was sufficient to reduce temporal autocorrelation. To account for different sunrise and sunset times across space and at different times of the year, we converted detection times to solar time; with sunrise and sunset times standardised at 06:00 and 18:00 respectively. We did so using the average double anchoring approach described by @https://doi.org/10.1111/2041-210X.13290 in the ‘activity’ r-package [@rowcliffe_activity].
+
+We attached Ecological Vegetation Class (hereafter 'EVC') groups [@delwp2020] to each camera-trap location. Rainforests are interspersed (primarily in low lying gullies) throughout wet and damp forests at a finescale (relevant to predator movements), and so, we merged these groupings (hereafter 'wet forests'). For each deployment, we calculated the number of poison fox-baits within a 2.3 km radius around each camera-trap - the average maximum distance foxes in these region travel from their home range centre [@hradsky2017human].
+
+Using the 'reshape' r-package [@reshape], we manipulated the detection table into a dataframe with a row for each hour of the day, for every camera-trap deployment, recording the total number of 'independent' fox and feral cat detections within each hour for the entire camera-trap survey duration.  
+
+## Generalised additive models of diel activity 
+We modelled predator counts (response variable) with generalised additive mixed-effects models (hereafter 'GAMMs') implemented in the 'mgcv' r-package [@wood2017]. We first fit these models using the poisson family, but switched to the negative binomial family as overdispersion, but not zero-inflation, was detected using the 'DHARMa' r-package [@DHARMa]. We specified a model offset to account for differences in camera-trap survey durations and a random intercept for each site to account for repeat sampling. We used a duchon spline static spatial smooth to directly model spatial autocorrelation and differences in predator activity across space (i.e. the effect of unmodelled environmental covariates). For the fox model, we additionally included a thin plate regression spline for poison-bait density, with a factor smoother for each region (due to differences in bait replacement schedules). This formed the base model specification for each model we fitted. Models (n = 4) differed in their specification of the cyclic hour smooth in order to explore (1) variations in predator diel activity across EVC groups, as well as how (2a) feral cat diel activity differed with the presence-absence of foxes, and (2b) across the gradient of observed fox counts (detailed in the sections below). We plotted models using 'ggplot2' and 'gratia' R-packages [@ggplot2; @gratia]. 
+
+We expected predator activity to be lowest during the day, but potentially having small shifts in relative activity between sunset and sunrise across the different EVC groups (1). And so, fitting separate responses for each EVC group would throw away this shared information, which is particularly costly for the least surveyed groups -- resulting in more noisy estimates. We therefore specified a global smoother for hour (i.e. average response), along with group-level smoothers with shared wiggliness for each EVC group [i.e. model GS in @pedersen2019hierarchical]. This model structure penalises functions which deviate strongly from the average response--allowing confidence that they are true deviations opposed to the result of sampling noise. 
+
+Because feral cats are likely subordinate to foxes, we investigated changes in their diel activity in response to both the (2a) presence-absence and (2b) counts of foxes. We added extra columns to our dataframe for whether foxes were detected on each camera-trap or not, as well as the number of fox detections divided by the log of the survey days to account for differences in camera-trap survey durations. Because we saw different fox diel activity patterns in wet forests (more active during the day) relative to the other EVC groups (nocturnal), we expected feral cats to temporally avoid foxes in opposing ways between these wet and dry vegetation groups. We therefore modelled fox-induced changes in feral cat diel activity separately for wet and dry vegetation groups. Because of our large sample size, we split dry vegetation groups by region to for spatial replication. We refer to this variable as 'habitat type'; having three levels:  wet forests of the Otway Ranges ('wet_otways') dry EVC groups of the Otway Ranges ('dry_otways') and all of the Glenelg region data ('dry_glenelg'). 
+
+To fit a model which estimate feral cat diel activity where foxes were also detected, and camera-trap sites where foxes not detected (2a), we specified an cyclic hourly by variable smooth (for the presence-absence of foxes), with a factor smooth basis for habitat type. To fit a model which allowing feral cat diel activity to change across the range of adjusted fox counts (2b), we used a tensor product of hour and adjusted fox counts, also employing a by variable smooth to estimate this separately across each habitat type. We used a tensor product rather than a linear by variable for fox counts because predator interactions are unlikely to be linear [@https://doi.org/10.1111/j.1365-2664.2009.01650.x]. 
+
+
+
+\newpage
+
+```{r map, out.width="100%", fig.cap = "Locations of study sites in south-west Victoria, Australia. The grids of camera-traps are denoted by white dots. The Glenelg region is to the west and Otway region to the east. Native vegetation is indicated by dark green, with hill shading. Map tiles by Stamen Design, under CC BY 3.0, map data by OpenStreetMap, under CC BY SA."}
+knitr::include_graphics("../figs/fig1_map.png")
+```
+
+\newpage
+
+RESULTS
+============
+
+## Differences in diel activity across vegetation types 
+
+
+
+## Fox-induced changes in feral cat diel activity 
+
+\newpage
+
+```{r tab1}
+library(pander)
+library(tidyverse)
+
+# load records
+records <- read_csv("../derived_data/counts_hour_cleaned.csv")
+# drop hour
+records <- distinct(records, station_year, .keep_all = TRUE)
+# get unique sites dataframe
+camdata <- distinct(records, station, .keep_all = TRUE)
+
+table1 <- records %>%
+  group_by(region, vegetation_group) %>%
+  mutate(sites = length(unique(station)),
+         deployments = length(unique(station_year)),
+         fox_count_vr = sum(fox_count),
+         cat_count_vr = sum(cat_count),
+         fox_present = sum(fox_pa == "present"),
+         cat_present = sum(cat_pa == "present"),
+         fox_naive = (fox_present / deployments),
+         cat_naive = (cat_present / deployments)
+         )
+
+table1 <- table1 %>%
+  select(region, vegetation_group, sites, deployments, fox_count_vr, cat_count_vr, fox_naive, cat_naive)  %>% 
+  distinct() %>%
+  arrange(vegetation_group, region)
+
+# rename region 
+table1$region <- factor(table1$region)
+levels(table1$region) <- c("Glenelg", "Otway")
+
+# make table
+pander(table1, style = "simple", split.table = Inf, caption = "Summary of camera-trap deployments in unique sites within Ecological Vegetation Class groups, as well as independent counts of predator detections and naive occupancy rates, across two broad regions in south-west Victoria, Australia.", round = 2,
+              col.names = c("Region", "Vegetation", "Sites", "Deployments",  "Fox counts", "Cat counts", "Fox present", "Cat present"),
+)
+
+
+```
+
+\newpage
+
+```{r veg, out.width="100%", fig.cap = "Fox (A) and feral cat (B) diel activity patterns across Ecological Vegetation Class groups in south-west Victoria, Australia. Dotted, vertical lines respresent sunrise and sunset times. Shaded areas indicate 95\\% confidence intervals."}
+knitr::include_graphics("../figs/predator_veg.png")
+```
+
+
+\newpage
+
+```{r count, out.width="100%", fig.cap="Predicted feral cat diel activity (A) and uncertainty (B) across each habitat type in response to foxes (log counts adjusted for survey effort). Grey vertical lines respresent sunrise and sunset times. Shaded areas indicate 95\\% confidence intervals."}
+knitr::include_graphics("../figs/cat_fox_count.png")
+```
+
+\newpage
+
+
+
+DISCUSSION
+===================
+
+
+
+
+\newpage
+
+ACKNOWLEDGEMENTS
+===================
+We acknowledge and pay respect to the Gadubanud and Gunditjmara people on whose traditional lands this study took place. This experiment was a collaborative effort between the Glenelg Ark (Department of Environment, Land Water and Planning) and Otway Ark (Parks Victoria) working groups. We are extremely thankful to those who led and assisted with these camera-trap deployments and image processing. Univeristy of Melbounre led surveys were conducted under University of Melbourne Animal Ethics Committee approval 1714119 and Victorian Government Department of Environment, Land Water and Planning Research Permit 10008273. Our study was generously supported by the Conservation Ecology Centre, the Victorian Government Department of Environment, Land Water and Planning, Arthur Rylah Institute for Environmental Research, Parks Victoria and the Australian Government’s National Environmental Science Program through the Threatened Species Recovery Hub, and ARC Linkage Project LP170101134. MR also receives support from an Australian Government Research Training Program Scholarship.
+
+
+
+
+OPEN RESEARCH
+===================
+
+Raw data and code are on Github link xx.  
+Data will be deposited on the Dryad Digital Repository after acceptance.
+
+\newpage
+
+REFERENCES {#references .unnumbered}
+==========
+

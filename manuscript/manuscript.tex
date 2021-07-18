@@ -1,0 +1,317 @@
+\documentclass[]{elsarticle} %review=doublespace preprint=single 5p=2 column
+%%% Begin My package additions %%%%%%%%%%%%%%%%%%%
+\usepackage[hyphens]{url}
+
+  \journal{Ecography} % Sets Journal name
+
+
+\usepackage{lineno} % add
+  \linenumbers % turns line numbering on
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\usepackage{graphicx}
+\usepackage{booktabs} % book-quality tables
+%%%%%%%%%%%%%%%% end my additions to header
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \usepackage{fontspec}
+  \ifxetex
+    \usepackage{xltxtra,xunicode}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\usepackage[margin=1.1in]{geometry}
+\bibliographystyle{elsarticle-harv}
+\usepackage{longtable}
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={Dynamic shifts in predator diel activity due to habitat type and fear},
+            colorlinks=false,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+
+\setcounter{secnumdepth}{5}
+% Pandoc toggle for numbering sections (defaults to be off)
+
+% Pandoc citation processing
+
+% Pandoc header
+\usepackage{setspace}\doublespacing
+\usepackage{float}
+\floatplacement{figure}{H}
+
+
+
+\begin{document}
+\begin{frontmatter}
+
+  \title{Dynamic shifts in predator diel activity due to habitat type and fear}
+    \author[UOM]{Matthew W. Rees\corref{1}}
+   \ead{matt.wayne.rees@gmail.com} 
+    \author[CEC]{Jack H. Pascoe}
+  
+    \author[CEC]{Mark Le Pla}
+  
+    \author[CEC]{Emma K. Birnbaum}
+  
+    \author[ARI]{Alan Robley}
+  
+    \author[CU,TKI]{Nick Golding}
+  
+    \author[UOM]{Brendan A. Wintle}
+  
+    \author[UOM]{Bronwyn A. Hradsky}
+  
+      \address[UOM]{Quantitative \& Applied Ecology Group, School of Ecosystem and Forest Science, The University of Melbourne, Parkville, VIC, Australia}
+    \address[CEC]{Conservation Ecology Centre, Otway Lighthouse Rd, Cape Otway, VIC, Australia}
+    \address[ARI]{Department of Environment, Land, Water and Planning, Arthur Rylah Institute for Environmental Research, Heidelberg, Australia}
+    \address[CU]{Curtin University, Bentley, WA, Australia}
+    \address[TKI]{Telethon Kids Institute, Perth Children's Hospital, Nedlands, WA, Australia}
+      \cortext[1]{Corresponding Author}
+  
+  \begin{abstract}
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \tightlist
+  \item
+    Background.
+  \item
+    Methods.
+  \item
+    Results.
+  \item
+    \emph{Synthesis and applications.}
+  \end{enumerate}
+  \end{abstract}
+   \begin{keyword} daily activity patterns; camera trap; \emph{Felis catus}; invasive predator; interspecific competition; mesopredator release; diel activity; hierarchical generalised additive models; species interactions; \emph{Vulpes vulpes}.\end{keyword}
+ \end{frontmatter}
+
+\parskip=12pt
+
+\newpage
+
+\hypertarget{introduction}{%
+\section{INTRODUCTION}\label{introduction}}
+
+The activity of an animal varies across space and time.
+Spatial activity is major research focus, however, temporal activity is much less studied.
+How temporal activity varies across space is even less understood.
+
+The physical environment and presence of other species shapes animal diel activity.
+Directly and indirectly.
+
+Species interactions - coexistence or avoidance - are important to understand for management.
+Species can avoid other species through spatial and/or temporal avoidance.
+
+Classic models of diel activity overlap- flawed.
+No covariates - how does this change across space.
+Haphazard methods to faciltiate this e.g.~(xx).
+
+GAMs increasingly being used for diel activity (but not necessarily species overlap).
+Particularly because you can model covariates.
+However GAMs have features which lend themselves to this analysis, but have not being used - flexible joint spatial and temporal heirarchical modelling.
+
+Interactions between invasive predators are important to understand.
+
+In this study, we\ldots{}
+
+\newpage
+
+\hypertarget{materials-and-methods}{%
+\section{MATERIALS AND METHODS}\label{materials-and-methods}}
+
+\hypertarget{study-area}{%
+\subsection{Study area}\label{study-area}}
+
+We collated camera-trap data from two distinct regions in south-west Victoria, Australia (Fig. 1). The terrestrial mammalian predator guild is depauperate here. Dingoes \emph{Canis familiaris} are now absent throughout, as is the the tiger quoll \emph{Dasyurus maculatus}, more recently absent in the Otway Ranges (last sighted in 2014 despite extensive camera-trapping). Introduced red foxes and feral cat are therefore the only medium-large functional mammalian terrestrial predators across both regions. Across broad sections of each region, government land managers conduct ongoing targeted fox control for biodiversity conservation - poison baits containing 3 mg of sodium mono-fluroacetate (1080) are buried at a depth of 10 cm at 1-km intervals along accessible forest tracks and roads. The purpose of each collated camera-trap study was to to experimentally survey changes in the mammalian community due to fox control, and so, our study covers a wide range contexts with and without fox-baiting.
+
+In the Glenelg region, Gunditjmara country, natural vegetation has been highly fragmented. Here, camera-survey sites were situated in six distinct forest blocks; two of which separated by a river, others separated by mostly pastoral farming and residential property). Foxes in three forests blocks have been subject to lethal control since October 2005, with 1080 poison-baits replaced fortnightly (Robley et al. 2014).
+
+The Otway Ranges, Gadubanud and XX country, is a largely continuous patch of natural vegetation with a strong east-west rainfall and elevation gradient (Swan et al. 2021). Foxes are controlled through 1080 poison-baits with monthly replacement across most of the Otway Ranges (a large section to the north-west remains unbaited). The majority of this baiting began in 2016 - 2017, although fox-baiting commenced in some small sections in 2008.
+
+Alongside fragmentation, the extremely rugged, wet forest and rainforest matrix in the western Otway Ranges is the main difference between the two regions. Prescribed fire, primarily for the purpose of asset protection, is another key management action undertaken throughout both regions (except in very wet sections of Otway Ranges).
+
+\hypertarget{camera-trapping-surveys}{%
+\subsection{Camera-trapping surveys}\label{camera-trapping-surveys}}
+
+We compiled camera-trap data from four distinct survey across these regions. After removing camera-traps which were operational for less than 14 days, this totalled 4276 deployments of camera-traps at 1527 camera-trap sites. Survey durations ranged between 14 and 93 days (mean 43), totalling 183,678 trapnights. The number of sites, deployments and trapnights were nearly equal across both regions. Camera-trap were deployed in the Glenelg region between 2013 -- 2019, whereas in the Otway Ranges surveys were conducted in 2016 -- 2019. Camera-trap spacing was highly variable; with minimum distance between sites ranging between 40 - 4150 m (mean: 597 m).
+
+All camera-trap deployments consisted of a Reconyx (Holmen, Wisconsin) brand camera-trap (both white and infrared flashes), attached to a tree or a metal picket, facing a lure. Camera-traps were set-up in two ways depending on the key aim of the project, either targeted toward predators or prey species. One study across both regions positioned camera-traps lower on a tree (around 15 - 30 cm above the ground -- angled only slightly downwards) facing a tuna oil lure approximately 2 - 2.5 m away (detailed in Rees et al. 2019). The remaining camera-traps were positioned higher on a tree or a metal picket (at least 40 cm above ground) and angled downwards more strongly - facing a lure approximately 1 - 1.5 m away. These lures consisted of peanut butter, golden syrup and rolled oats were mixed into a small ball, placed within a tea strainer or PVC pipe container and secured either to the ground, or 20 - 60 cm above ground on a wooden stake. All set-ups were effective in detecting both predator and prey species.
+
+\hypertarget{data-preparation}{%
+\subsection{Data preparation}\label{data-preparation}}
+
+We first created a table of species detections and deployment information (coordinates, dates) for every camera-trap deployment in R version 3.6.3 (R Core Team 2020). We discarded camera-traps which were active for less than 14 days. We fit lorelograms using methods provided by Iannarilli et al. (2019) to identify that removing repeat site detections of a species within 30 minutes was sufficient to reduce temporal autocorrelation. To account for different sunrise and sunset times across space and at different times of the year, we converted detection times to solar time; with sunrise and sunset times standardised at 06:00 and 18:00 respectively. We did so using the average double anchoring approach described by Vazquez et al. (2019) in the `activity' r-package (Rowcliffe 2019).
+
+We attached Ecological Vegetation Class (hereafter `EVC') groups (DELWP 2020) to each camera-trap location. Rainforests are interspersed (primarily in low lying gullies) throughout wet and damp forests at a finescale (relevant to predator movements), and so, we merged these groupings (hereafter `wet forests'). For each deployment, we calculated the number of poison fox-baits within a 2.3 km radius around each camera-trap - the average maximum distance foxes in these region travel from their home range centre (Hradsky et al. 2017).
+
+Using the `reshape' r-package (Wickham 2007), we manipulated the detection table into a dataframe with a row for each hour of the day, for every camera-trap deployment, recording the total number of `independent' fox and feral cat detections within each hour for the entire camera-trap survey duration.
+
+\hypertarget{generalised-additive-models-of-diel-activity}{%
+\subsection{Generalised additive models of diel activity}\label{generalised-additive-models-of-diel-activity}}
+
+We modelled predator counts (response variable) with generalised additive mixed-effects models (hereafter `GAMMs') implemented in the `mgcv' r-package (Wood 2017). We first fit these models using the poisson family, but switched to the negative binomial family as overdispersion, but not zero-inflation, was detected using the `DHARMa' r-package (Hartig 2020). We specified a model offset to account for differences in camera-trap survey durations and a random intercept for each site to account for repeat sampling. We used a duchon spline static spatial smooth to directly model spatial autocorrelation and differences in predator activity across space (i.e.~the effect of unmodelled environmental covariates). For the fox model, we additionally included a thin plate regression spline for poison-bait density, with a factor smoother for each region (due to differences in bait replacement schedules). This formed the base model specification for each model we fitted. Models (n = 4) differed in their specification of the cyclic hour smooth in order to explore (1) variations in predator diel activity across EVC groups, as well as how (2a) feral cat diel activity differed with the presence-absence of foxes, and (2b) across the gradient of observed fox counts (detailed in the sections below). We plotted models using `ggplot2' and `gratia' R-packages (Wickham 2016, Simpson 2021).
+
+We expected predator activity to be lowest during the day, but potentially having small shifts in relative activity between sunset and sunrise across the different EVC groups (1). And so, fitting separate responses for each EVC group would throw away this shared information, which is particularly costly for the least surveyed groups -- resulting in more noisy estimates. We therefore specified a global smoother for hour (i.e.~average response), along with group-level smoothers with shared wiggliness for each EVC group (i.e.~model GS in Pedersen et al. 2019). This model structure penalises functions which deviate strongly from the average response--allowing confidence that they are true deviations opposed to the result of sampling noise.
+
+Because feral cats are likely subordinate to foxes, we investigated changes in their diel activity in response to both the (2a) presence-absence and (2b) counts of foxes. We added extra columns to our dataframe for whether foxes were detected on each camera-trap or not, as well as the number of fox detections divided by the log of the survey days to account for differences in camera-trap survey durations. Because we saw different fox diel activity patterns in wet forests (more active during the day) relative to the other EVC groups (nocturnal), we expected feral cats to temporally avoid foxes in opposing ways between these wet and dry vegetation groups. We therefore modelled fox-induced changes in feral cat diel activity separately for wet and dry vegetation groups. Because of our large sample size, we split dry vegetation groups by region to for spatial replication. We refer to this variable as `habitat type'; having three levels: wet forests of the Otway Ranges (`wet\_otways') dry EVC groups of the Otway Ranges (`dry\_otways') and all of the Glenelg region data (`dry\_glenelg').
+
+To fit a model which estimate feral cat diel activity where foxes were also detected, and camera-trap sites where foxes not detected (2a), we specified an cyclic hourly by variable smooth (for the presence-absence of foxes), with a factor smooth basis for habitat type. To fit a model which allowing feral cat diel activity to change across the range of adjusted fox counts (2b), we used a tensor product of hour and adjusted fox counts, also employing a by variable smooth to estimate this separately across each habitat type. We used a tensor product rather than a linear by variable for fox counts because predator interactions are unlikely to be linear (Johnson and VanDerWal 2009).
+
+\newpage
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figs/fig1_map} \caption{Locations of study sites in south-west Victoria, Australia. The grids of camera-traps are denoted by white dots. The Glenelg region is to the west and Otway region to the east. Native vegetation is indicated by dark green, with hill shading. Map tiles by Stamen Design, under CC BY 3.0, map data by OpenStreetMap, under CC BY SA.}\label{fig:map}
+\end{figure}
+
+\newpage
+
+\hypertarget{results}{%
+\section{RESULTS}\label{results}}
+
+\hypertarget{differences-in-diel-activity-across-vegetation-types}{%
+\subsection{Differences in diel activity across vegetation types}\label{differences-in-diel-activity-across-vegetation-types}}
+
+\hypertarget{fox-induced-changes-in-feral-cat-diel-activity}{%
+\subsection{Fox-induced changes in feral cat diel activity}\label{fox-induced-changes-in-feral-cat-diel-activity}}
+
+\newpage
+
+\begin{longtable}[]{@{}cccccccc@{}}
+\caption{Summary of camera-trap deployments in unique sites within Ecological Vegetation Class groups, as well as independent counts of predator detections and naive occupancy rates, across two broad regions in south-west Victoria, Australia.}\tabularnewline
+\toprule
+Region & Vegetation & Sites & Deployments & Fox counts & Cat counts & Fox present & Cat present\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Region & Vegetation & Sites & Deployments & Fox counts & Cat counts & Fox present & Cat present\tabularnewline
+\midrule
+\endhead
+Glenelg & Dry Forest & 25 & 68 & 347 & 9 & 0.66 & 0.1\tabularnewline
+Otway & Dry Forest & 111 & 310 & 341 & 158 & 0.42 & 0.28\tabularnewline
+Glenelg & Heathland & 40 & 119 & 265 & 59 & 0.43 & 0.34\tabularnewline
+Otway & Heathland & 3 & 9 & 8 & 6 & 0.22 & 0.44\tabularnewline
+Glenelg & Heathy Woodland & 154 & 424 & 574 & 96 & 0.31 & 0.14\tabularnewline
+Otway & Heathy Woodland & 82 & 256 & 160 & 66 & 0.29 & 0.14\tabularnewline
+Glenelg & Herb-rich Woodland & 59 & 372 & 860 & 197 & 0.5 & 0.27\tabularnewline
+Otway & Herb-rich Woodland & 2 & 6 & 3 & 2 & 0.33 & 0.17\tabularnewline
+Glenelg & Lowland Forest & 383 & 1046 & 1900 & 290 & 0.46 & 0.18\tabularnewline
+Otway & Lowland Forest & 52 & 162 & 190 & 35 & 0.42 & 0.14\tabularnewline
+Glenelg & Swampy Scrub & 4 & 10 & 19 & 8 & 0.6 & 0.5\tabularnewline
+Otway & Swampy Scrub & 36 & 97 & 64 & 88 & 0.32 & 0.33\tabularnewline
+Otway & Wet Forest & 281 & 780 & 715 & 1187 & 0.31 & 0.54\tabularnewline
+\bottomrule
+\end{longtable}
+
+\newpage
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figs/predator_veg} \caption{Fox (A) and feral cat (B) diel activity patterns across Ecological Vegetation Class groups in south-west Victoria, Australia. Dotted, vertical lines respresent sunrise and sunset times. Shaded areas indicate 95\% confidence intervals.}\label{fig:veg}
+\end{figure}
+
+\newpage
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figs/cat_fox_count} \caption{Predicted feral cat diel activity (A) and uncertainty (B) across each habitat type in response to foxes (log counts adjusted for survey effort). Grey vertical lines respresent sunrise and sunset times. Shaded areas indicate 95\% confidence intervals.}\label{fig:count}
+\end{figure}
+
+\newpage
+
+\hypertarget{discussion}{%
+\section{DISCUSSION}\label{discussion}}
+
+\newpage
+
+\hypertarget{acknowledgements}{%
+\section{ACKNOWLEDGEMENTS}\label{acknowledgements}}
+
+We acknowledge and pay respect to the Gadubanud and Gunditjmara people on whose traditional lands this study took place. This experiment was a collaborative effort between the Glenelg Ark (Department of Environment, Land Water and Planning) and Otway Ark (Parks Victoria) working groups. We are extremely thankful to those who led and assisted with these camera-trap deployments and image processing. Univeristy of Melbounre led surveys were conducted under University of Melbourne Animal Ethics Committee approval 1714119 and Victorian Government Department of Environment, Land Water and Planning Research Permit 10008273. Our study was generously supported by the Conservation Ecology Centre, the Victorian Government Department of Environment, Land Water and Planning, Arthur Rylah Institute for Environmental Research, Parks Victoria and the Australian Government's National Environmental Science Program through the Threatened Species Recovery Hub, and ARC Linkage Project LP170101134. MR also receives support from an Australian Government Research Training Program Scholarship.
+
+\hypertarget{open-research}{%
+\section{OPEN RESEARCH}\label{open-research}}
+
+Raw data and code are on Github link xx.\\
+Data will be deposited on the Dryad Digital Repository after acceptance.
+
+\newpage
+
+\hypertarget{references}{%
+\section*{REFERENCES}\label{references}}
+\addcontentsline{toc}{section}{REFERENCES}
+
+\hypertarget{refs}{}
+\leavevmode\hypertarget{ref-delwp2020}{}%
+DELWP 2020. Bioregions and evc benchmarks.
+
+\leavevmode\hypertarget{ref-DHARMa}{}%
+Hartig, F. 2020. DHARMa: Residual diagnostics for hierarchical (multi-level / mixed) regression models.
+
+\leavevmode\hypertarget{ref-hradsky2017human}{}%
+Hradsky, B. A. et al. 2017. Human-modified habitats facilitate forest-dwelling populations of an invasive predator, vulpes vulpes. - Scientific Reports 7: 1--12.
+
+\leavevmode\hypertarget{ref-https:ux2fux2fdoi.orgux2f10.1111ux2f2041-210X.13308}{}%
+Iannarilli, F. et al. 2019. Using lorelograms to measure and model correlation in binary data: Applications to ecological studies. - Methods in Ecology and Evolution 10: 2153--2162.
+
+\leavevmode\hypertarget{ref-https:ux2fux2fdoi.orgux2f10.1111ux2fj.1365-2664.2009.01650.x}{}%
+Johnson, C. N. and VanDerWal, J. 2009. Evidence that dingoes limit abundance of a mesopredator in eastern australian forests. - Journal of Applied Ecology 46: 641--646.
+
+\leavevmode\hypertarget{ref-pedersen2019hierarchical}{}%
+Pedersen, E. J. et al. 2019. Hierarchical generalized additive models in ecology: An introduction with mgcv. - PeerJ 7: e6876.
+
+\leavevmode\hypertarget{ref-R}{}%
+R Core Team 2020. R: A language and environment for statistical computing. - R Foundation for Statistical Computing.
+
+\leavevmode\hypertarget{ref-REES2019108287}{}%
+Rees, M. W. et al. 2019. Unexpectedly high densities of feral cats in a rugged temperate forest. - Biological Conservation 239: 108287.
+
+\leavevmode\hypertarget{ref-ROBLEY2014262}{}%
+Robley, A. et al. 2014. Long-term and large-scale control of the introduced red fox increases native mammal occupancy in australian forests. - Biological Conservation 180: 262--269.
+
+\leavevmode\hypertarget{ref-rowcliffe_activity}{}%
+Rowcliffe, M. 2019. Activity: Animal activity statistics.
+
+\leavevmode\hypertarget{ref-gratia}{}%
+Simpson, G. L. 2021. Gratia: Graceful 'ggplot'-based graphics and other functions for gams fitted using 'mgcv'.
+
+\leavevmode\hypertarget{ref-swan2021species}{}%
+Swan, M. et al. 2021. Species distribution models for conservation planning in fire-prone landscapes. - Biodiversity and Conservation 30: 1119--1136.
+
+\leavevmode\hypertarget{ref-https:ux2fux2fdoi.orgux2f10.1111ux2f2041-210X.13290}{}%
+Vazquez, C. et al. 2019. Comparing diel activity patterns of wildlife across latitudes and seasons: Time transformations using day length. - Methods in Ecology and Evolution 10: 2057--2066.
+
+\leavevmode\hypertarget{ref-reshape}{}%
+Wickham, H. 2007. Reshaping data with the reshape package. - Journal of Statistical Software 21: 1--20.
+
+\leavevmode\hypertarget{ref-ggplot2}{}%
+Wickham, H. 2016. Ggplot2: Elegant graphics for data analysis. - Springer-Verlag New York.
+
+\leavevmode\hypertarget{ref-wood2017}{}%
+Wood, S. N. 2017. Generalized additive models: An introduction with r. - CRC press.
+
+
+\end{document}
+
+
