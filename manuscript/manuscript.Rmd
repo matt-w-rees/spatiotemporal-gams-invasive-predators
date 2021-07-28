@@ -195,13 +195,11 @@ table1 <- records %>%
          fox_count_vr = sum(fox_count),
          cat_count_vr = sum(cat_count),
          fox_present = sum(fox_pa == "present"),
-         cat_present = sum(cat_pa == "present"),
-         fox_naive = (fox_present / deployments),
-         cat_naive = (cat_present / deployments)
+         cat_present = sum(cat_pa == "present")
          )
 
 table1 <- table1 %>%
-  select(region, vegetation_group, sites, deployments, fox_count_vr, cat_count_vr, fox_naive, cat_naive)  %>% 
+  select(region, vegetation_group, sites, deployments, fox_count_vr, cat_count_vr)  %>% 
   distinct() %>%
   arrange(vegetation_group, region)
 
@@ -211,7 +209,7 @@ levels(table1$region) <- c("Glenelg", "Otway")
 
 # make table
 pander(table1, style = "simple", split.table = Inf, caption = "Summary of camera-trap deployments in unique sites within Ecological Vegetation Class groups, as well as independent counts of predator detections and naive occupancy rates, across two broad regions in south-west Victoria, Australia.", round = 2,
-              col.names = c("Region", "Vegetation", "Sites", "Deployments",  "Fox counts", "Cat counts", "Fox present", "Cat present"),
+              col.names = c("Region", "Vegetation", "Sites", "Deployments",  "Fox counts", "Cat counts"),
 )
 
 
