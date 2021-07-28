@@ -98,7 +98,7 @@ gam_fox <- bam(fox ~ s(hour, bs = "cc", k = 8) +
                      s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
                      s(station, bs = "re") +  
                      offset(log(survey_duration)), 
-                    data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
+                    data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE, select = TRUE)
 summary(gam_fox)
 plot(gam_fox, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
 
@@ -109,7 +109,7 @@ gam_cat_1 <- bam(cat ~ s(hour, bs = "cc", k = 8) +
                        s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
                        s(station, bs = "re") +  
                        offset(log(survey_duration)), 
-                 data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
+                 data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE, select = TRUE)
 summary(gam_cat_1)
 plot(gam_cat_1, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
 
@@ -120,7 +120,7 @@ gam_cat_2a <- bam(cat ~ fox_pa + s(hour, habitat_type, by = fox_pa, bs = "fs", x
                         s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
                         s(station, bs = "re") +  
                         offset(log(survey_duration)), 
-                  data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
+                  data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE, select = TRUE)
 summary(gam_cat_2a)
 plot(gam_cat_2a, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
 
@@ -129,10 +129,9 @@ gam_cat_2b <- bam(cat ~ habitat_type + t2(hour, fox_count_adj, by = habitat_type
                     s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
                     s(station, bs = "re") +  
                     offset(log(survey_duration)), 
-                  data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
+                  data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE, select = TRUE)
 summary(gam_cat_2b)
 plot(gam_cat_2b, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
-
 
 
 
@@ -220,7 +219,7 @@ df = expand.grid(hour = 0:23,
                  survey_duration = mean(records$survey_duration))
 # predict model results into dataframe
 x = sapply(gam_cat_2b$smooth, "[[",  "label")
-df_int <- cbind(df, predict(gam_cat_2b, newdata = df, se.fit = TRUE, type = "link", exclude = c(x[4:5], "s(survey_duration)")))
+df_int <- cbind(df, predict(gam_cat_2b_st, newdata = df, se.fit = TRUE, type = "link", exclude = c(x[4:5], "s(survey_duration)")))
 # plot
 plot_range <- ggplot(aes(hour, fox_count_adj, fill = fit), data = df_int) +
   geom_tile() +
