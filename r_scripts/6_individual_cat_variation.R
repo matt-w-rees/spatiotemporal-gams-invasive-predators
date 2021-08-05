@@ -267,7 +267,7 @@ x = sapply(gam_cat_ind_g$smooth, "[[",  "label")
 df <- cbind(df, predict.gam(gam_cat_ind_g, newdata = df, se.fit = TRUE, type = "link", newdata.guaranteed = TRUE, exclude = c(x[3:6], "s(survey_duration)")))
 # shorten cat names
 df$individual <- as.character(df$individual)
-df$individual <- recode(df$individual, annya_swirl_lola = "faith", c_tabby_quasimodo = "brisket", m_swirl_socksy = "devon", annya_swirl_ben = "sheila", annya_swirl_motley = "motley", hotspur_tabby_1 = "sprout", m_tabby_murray = "murray")
+df$individual <- recode(df$individual, annya_swirl_lola = "faith", c_tabby_quasimodo = "brisket", m_swirl_socksy = "boots", annya_swirl_ben = "dolly", annya_swirl_motley = "motley", hotspur_tabby_1 = "sprout", m_tabby_murray = "murray")
 # plot top 7 individuals
 plot_ind <- ggplot(data=df, aes(x=hour, y=fit, group=individual)) +
   geom_line(aes(y=fit, x=hour), lwd = 0.7) +
@@ -277,7 +277,7 @@ plot_ind <- ggplot(data=df, aes(x=hour, y=fit, group=individual)) +
   labs(subtitle = "iii.   Predicted activity", x = "Hour", y = "log(count)") 
 
 # plot / save
-png("figs/cat_ind_g.png", width = 9, height = 6, res = 600, units = "in")
+png("figs/cat_ind_g.png", width = 9, height = 5, res = 600, units = "in")
 (plot_global | plot_difference) / plot_ind  + plot_annotation(title = "A.   Glenelg region")
 dev.off()
 
@@ -310,8 +310,8 @@ plot_ind <- ggplot(data=df, aes(x=hour, y=fit, group=individual)) +
   labs(subtitle = "iii.   Predicted activity", x = "Hour", y = "log(count)") 
 
 # plot / save
-png("figs/cat_ind_o.png", width = 9, height = 6, res = 600, units = "in")
-(plot_global | plot_difference) / plot_ind  + plot_annotation(title = "B.   Western Otways")
+png("figs/cat_ind_o.png", width = 9, height = 5, res = 600, units = "in")
+(plot_global | plot_difference) / plot_ind  + plot_annotation(title = "B.   Western Otway Ranges")
 dev.off()
 
 # to combine figures, type in the terminal (using imagemagick): 

@@ -98,7 +98,7 @@ gam_fox <- bam(fox ~ s(hour, bs = "cc", k = 8) +
                      s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
                      s(station, bs = "re") +  
                      offset(log(survey_duration)), 
-                    data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE, select = TRUE)
+                    data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
 summary(gam_fox)
 plot(gam_fox, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
 
@@ -109,20 +109,10 @@ gam_cat_1 <- bam(cat ~ s(hour, bs = "cc", k = 8) +
                        s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
                        s(station, bs = "re") +  
                        offset(log(survey_duration)), 
-                 data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE, select = TRUE)
+                 data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
 summary(gam_cat_1)
 plot(gam_cat_1, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
 
-
-# 2) DO CATS CHANGE DIEL ACTIVITY BASED ON FOX ACTIVITY?
-# 2a) fox presence / absence
-gam_cat_2a <- bam(cat ~ fox_pa + s(hour, habitat_type, by = fox_pa, bs = "fs", xt = list(bs = "cc"), k = 8) + 
-                        s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
-                        s(station, bs = "re") +  
-                        offset(log(survey_duration)), 
-                  data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE, select = TRUE)
-summary(gam_cat_2a)
-plot(gam_cat_2a, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
 
 # 2b) fox counts
 gam_cat_2b <- bam(cat ~ habitat_type + t2(hour, fox_count_adj, by = habitat_type, bs = c("cc", "tp"), k = c(10, 5), full = TRUE) +  
@@ -181,32 +171,6 @@ dev.off()
 
 # to combine figures, type in the terminal (using imagemagick): 
 # convert figs/fox_veg.png figs/cat_veg.png  -append figs/predator_veg.png
-
-
-# PLOT MODEL 2A ------------------------------------------------------------------
-# subset records
-newdf <- expand.grid(survey_duration = mean(records$survey_duration), longitude = mean(records$longitude), latitude = mean(records$latitude), hour = 0:23, fox_pa = c("absent", "present"), station = "a05", habitat_type = levels(records$habitat_type))
-# predict into records 
-x = sapply(gam_cat_2a$smooth, "[[",  "label")
-newdf_pred <- cbind(newdf, predict(gam_cat_2a, newdata = newdf, se.fit = TRUE, type = "link", exclude = c(x[3:4], "s(survey_duration)")))
-# rename fox_pa / 0,1
-newdf_pred <- rename(newdf_pred, fox = fox_pa)
-# plot 
-plot_pa <- ggplot(data=newdf_pred, aes(x=hour, y=fit, col=fox, fill = fox)) +
-  geom_ribbon(aes(ymin=(fit-2*se.fit), ymax=(fit+2*se.fit)), alpha=0.2, colour = NA) +
-  geom_line(aes(y=fit, x=hour), lwd = 1.2) +
-  facet_wrap(~habitat_type, nrow =1) +
-  geom_vline(xintercept = c(6.16,18.34), colour = "black", size = 0.6, linetype="dotted") +
-  ggtitle("", subtitle = "Feral cat activity") +
-  ylab("log(count)") + 
-  xlab("Hour") + 
-  scale_color_manual(values=c('#619CFF','#F8766D')) + 
-  scale_fill_manual(values=c('#619CFF','#F8766D'))
-
-# plot / save
-png("figs/cat_fox_pa.png", width = 11, height = 3.5, res = 600, units = "in")
-plot_pa
-dev.off()
 
 
 # PLOT MODEL 2B ------------------------------------------------------------------

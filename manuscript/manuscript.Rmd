@@ -1,5 +1,5 @@
 ---
-title: Joint spatiotemporal models reveal dynamic shifts in mesopredator spatial and diel activity for apex predator avoidance
+title: Joint spatiotemporal models reveal dramatic shifts in mesopredator diel activity across individuals, habitat types and apex predator activity levels
 author:
   - name: Matthew W. Rees
     email: matt.wayne.rees@gmail.com
@@ -236,6 +236,11 @@ knitr::include_graphics("../figs/cat_fox_count.png")
 
 \newpage
 
+```{r ind, out.width="100%", fig.cap = "Individual variations in feral cat diel activity patterns across the Glenelg region (A) and wet forests of the western Otway Ranges (B) in south-west Victoria, Australia. Dotted, vertical lines represent average sunrise and sunset times. Shaded areas indicate 95\\% confidence intervals."}
+knitr::include_graphics("../figs/cat_ind.png")
+```
+
+\newpage
 
 
 DISCUSSION
