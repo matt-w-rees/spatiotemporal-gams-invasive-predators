@@ -110,6 +110,19 @@ records <- filter(records, is.na(individual) | individual != "annya_swirl_ben_&_
 # now add the new ones in 
 records <- rbind(records, records_double)
 
+unique(records$coat_type)
+
+# new simple coat type
+records$coat <- if_else(records$coat_type == "tortoise", "tabby", "temp")
+records$coat <- if_else(records$coat_type == "tabby", "tabby", records$coat)
+records$coat <- if_else(records$coat_type == "ginger", "tabby", records$coat)
+records$coat <- if_else(records$coat_type == "blackwhite", "black", records$coat)
+records$coat <- if_else(records$coat_type == "kittens_&_black", "black", records$coat)
+records$coat <- if_else(records$coat_type == "kittens_&_tortoise_&_tabby", "tabby", records$coat)
+records$coat <- if_else(records$coat_type == "tortoise_&_tabby", "tabby", records$coat)
+records <- filter(records, coat != "temp")
+unique(records$coat)
+
 
 # RESHAPE BY HOUR ---------------------------------------------------------
 # DATAFRAME 1:  HOUR ----------------------------------------------------
@@ -132,12 +145,12 @@ gam_data_g <- melt(records_g, id.var = colnames(records_g), measure.var = "occ")
 gam_data_o <- melt(records_o, id.var = colnames(records_o), measure.var = "occ")
 
 # cast to derive count per year per station_year long format
-gam_data_g = dcast(gam_data_g,  individual + station_year + hour ~ species, fill = 0, fun = sum)
-gam_data_o = dcast(gam_data_o,  individual + station_year + hour ~ species, fill = 0, fun = sum)
+gam_data_g = dcast(gam_data_g,  coat + station_year + hour ~ species, fill = 0, fun = sum)
+gam_data_o = dcast(gam_data_o,  coat + station_year + hour ~ species, fill = 0, fun = sum)
 
 # make a table with all unique combinations - (use camdata so we don't just take the sites with detections)
-df_g <- expand.grid(station_year = unique(camdata_g$station_year), individual = unique(records_g$individual), hour = 0:23)
-df_o <- expand.grid(station_year = unique(camdata_o$station_year), individual = unique(records_o$individual), hour = 0:23)
+df_g <- expand.grid(station_year = unique(camdata_g$station_year), coat = c("tabby", "black"), hour = 0:23)
+df_o <- expand.grid(station_year = unique(camdata_o$station_year), coat = c("tabby", "black"), hour = 0:23)
 
 # merge into gam_data so every hour for every station is provided (even with no predator detections) - fills missing values with NA
 gam_data_g <- left_join(df_g, gam_data_g)
@@ -148,13 +161,12 @@ gam_data_g$cat <- ifelse(is.na(gam_data_g$cat), 0, gam_data_g$cat)
 gam_data_o$cat <- ifelse(is.na(gam_data_o$cat), 0, gam_data_o$cat)
 
 # sort by station, hour
-gam_data_g <- arrange(gam_data_g, individual, station_year, hour)
-gam_data_o <- arrange(gam_data_o, individual, station_year, hour)
+gam_data_g <- arrange(gam_data_g, station_year, coat, hour)
+gam_data_o <- arrange(gam_data_o, station_year, coat, hour)
 
 ## merge in site covariates
 gam_data_g <- left_join(gam_data_g, camdata_g, by = "station_year")
 gam_data_o <- left_join(gam_data_o, camdata_o, by = "station_year")
-
 
 
 
@@ -165,13 +177,13 @@ gam_data_o <- left_join(gam_data_o, camdata_o, by = "station_year")
 ## Transform variable class  for GAMs
 gam_data_o <- transform(gam_data_o,
                        hour = as.integer(hour),
-                       individual = factor(individual, ordered = FALSE), 
+                       coat = factor(coat, ordered = FALSE), 
                        station = factor(station, ordered = FALSE), 
                        survey_duration = as.integer(survey_duration)
 )
 
 gam_cat_ind_o <- bam(cat ~ s(hour, bs = "cc", k = 8) +   
-                           s(hour, individual, bs = "fs", xt = list(bs = "cc"), k = 8) +  
+                           s(hour, coat, bs = "fs", xt = list(bs = "cc"), k = 8) +  
                            s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 100) +
                            s(station, bs = "re") +  
                            offset(log(survey_duration)), 
@@ -186,13 +198,13 @@ draw(gam_cat_ind_o)
 ## Transform variable class  for GAMs
 gam_data_g <- transform(gam_data_g,
                         hour = as.integer(hour),
-                        individual = factor(individual, ordered = FALSE), 
+                        coat = factor(coat, ordered = FALSE), 
                         station = factor(station, ordered = FALSE), 
                         survey_duration = as.integer(survey_duration)
 )
 
 gam_cat_ind_g <- bam(cat ~ s(hour, bs = "cc", k = 8) +   
-                           s(hour, individual, bs = "fs", xt = list(bs = "cc"), k = 8) +  
+                           s(hour, coat, bs = "fs", xt = list(bs = "cc"), k = 8) +  
                            s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 150) +
                            s(station, bs = "re") +  
                            offset(log(survey_duration)), 
