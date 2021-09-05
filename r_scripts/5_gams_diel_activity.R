@@ -9,6 +9,7 @@ library(patchwork)
 library(viridis)
 library(gratia)
 library(chron)
+library(sf)
 
 rm(list = ls())
 options(scipen = 999) 
@@ -25,8 +26,8 @@ records <- read.csv("derived_data/counts_hour.csv")
 # drop zoi's data 
 records <- filter(records, data_source != "zoi")
 
-# exclude stations left out for less than 2 weeks 
-records <- filter(records, survey_duration >= 14)
+# exclude stations left out for less than 7 days - something musta went wrong with those few cams
+records <- filter(records, survey_duration >= 7)
 hist(records$survey_duration / 23, breaks = 50)
 summary(records$survey_duration)
 
@@ -41,6 +42,13 @@ records$XGROUPNAME <- if_else(records$XGROUPNAME == "Wet or Damp Forests", "Wet 
 records$XGROUPNAME <- if_else(records$XGROUPNAME == "Riparian Scrubs or Swampy Scrubs and Woodlands", "Swampy Scrubs", records$XGROUPNAME)
 records$XGROUPNAME <- substr(records$XGROUPNAME, 1, nchar(records$XGROUPNAME) - 1)
 table(records$XGROUPNAME)
+
+# add xy coordinates
+records_sf <- st_as_sf(records, coords = c("longitude", "latitude"), crs = 4326) %>% 
+  st_transform(crs = 32754)
+records$x <- st_coordinates(records_sf)[,1]
+records$y <- st_coordinates(records_sf)[,2]
+head(records)
 
 
 # ADD FOX COUNTS PER CAMERA -----------------------------------------------
@@ -96,6 +104,7 @@ gam_fox <- bam(fox ~ s(hour, bs = "cc", k = 8) +
                      s(hour, vegetation_group, bs = "fs", xt = list(bs = "cc"), k = 8) + 
                      s(foxbaits, region, bs = "fs", xt = list(bs = "tp"), k = 4) + 
                      s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
+                     s(region, bs = "re") +  
                      s(station, bs = "re") +  
                      offset(log(survey_duration)), 
                     data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
@@ -107,6 +116,7 @@ plot(gam_fox, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
 gam_cat_1 <- bam(cat ~ s(hour, bs = "cc", k = 8) +   
                        s(hour, vegetation_group, bs = "fs", xt = list(bs = "cc"), k = 8) +  
                        s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
+                       s(region, bs = "re") +  
                        s(station, bs = "re") +  
                        offset(log(survey_duration)), 
                  data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
@@ -115,13 +125,31 @@ plot(gam_cat_1, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 
 
 
 # 2b) fox counts
-gam_cat_2b <- bam(cat ~ habitat_type + t2(hour, fox_count_adj, by = habitat_type, bs = c("cc", "tp"), k = c(10, 5), full = TRUE) +  
+gam_cat_2b <- bam(cat ~ habitat_type + t2(hour, fox_count_adj, by = habitat_type, bs = c("cc", "ts"), k = c(8, 5), full = TRUE) +  
                     s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 200) +
                     s(station, bs = "re") +  
                     offset(log(survey_duration)), 
-                  data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE, select = TRUE)
+                  data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
 summary(gam_cat_2b)
 plot(gam_cat_2b, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
+
+
+# 3 - space x time
+gam_cat_3 <- bam(cat ~ t2(longitude, latitude, hour, d = c(2, 1), bs = c("tp", "cc"), k = c(80, 8), full = TRUE) +
+                   s(station, bs = "re") +  
+                   offset(log(survey_duration)), 
+                 data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
+summary(gam_cat_3)
+plot(gam_cat_3, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
+
+
+gam_fox_3 <- bam(fox ~ t2(longitude, latitude, hour, d = c(2, 1), bs = c("tp", "cc"), k = c(80, 8), full = TRUE) +
+                       s(foxbaits, bs = "tp", k = 4) + 
+                       s(station, bs = "re") +  
+                       offset(log(survey_duration)), 
+                 data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
+summary(gam_fox_3)
+plot(gam_fox_3, pages = 1, scheme = 2, seWithMean = TRUE, shade = TRUE, scale = 0)
 
 
 

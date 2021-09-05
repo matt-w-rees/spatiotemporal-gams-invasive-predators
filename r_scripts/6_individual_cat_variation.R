@@ -194,7 +194,6 @@ gam_data_g <- transform(gam_data_g,
 gam_cat_ind_g <- bam(cat ~ s(hour, bs = "cc", k = 8) +   
                            s(hour, individual, bs = "fs", xt = list(bs = "cc"), k = 8) +  
                            s(longitude, latitude, bs = "ds",  m = c(1, 0.5), k = 150) +
-                           s(station, bs = "re") +  
                            offset(log(survey_duration)), 
                      data = gam_data_g, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
 summary(gam_cat_ind_g)
