@@ -152,7 +152,7 @@ summary(gam_cat_sp)
 ```
 
 
-### Spatial variation in the strength of diel patterns
+## Spatial variation in the strength of diel patterns
 
 ```{r space plot creation, echo=FALSE}
 #### FOX
@@ -196,21 +196,22 @@ data_g_plot4 = data_g_plot[with(data_g_plot, inSide(buffer_df4, x, y)),]
 data_g_plot <- rbind(data_g_plot1, data_g_plot2, data_g_plot3, data_g_plot4)
 
 # predict model results into dataframe
-data_g_plot <- cbind(data_g_plot, predict.gam(gam_fox_sp, newdata = data_g_plot, se.fit = TRUE, type = "link", exclude = c("s(station)", "s(survey_duration)")))
+data_g_plot <- cbind(data_g_plot, predict.gam(gam_fox_sp, newdata = data_g_plot, se.fit = TRUE, type = "response", exclude = c("s(station)", "s(survey_duration)")))
 data_g_plot <- rename(data_g_plot, fox_predicted = fit,  fox_predicted_se = se.fit) # rename
 # give each row / location a unique name to group by
 data_g_plot$location_id <- paste0(data_g_plot$x, "_", data_g_plot$y)
 # get difference in min max diel activity for each row
 data_g_plot <- data_g_plot %>% 
   group_by(location_id) %>% 
-  mutate(diel_diff = max(fox_predicted) - min(fox_predicted))
+  mutate(diel_diff = max(fox_predicted) - min(fox_predicted),          
+         diel_diff_pc = diel_diff / min(fox_predicted) * 100)
 
 # fox plot: spatial activity per hour
 g_fox_plot_hr <- ggplot(aes(x, y, fill = fox_predicted),
                      data = data_g_plot) +
   geom_tile()+
-  scale_fill_viridis("log(activity)", option = "viridis", limits = c(-5.27, -1.13)) +
-  geom_point(data = records_g, fill = NA, col = "white", size = 0.7, alpha = 0.1, shape = 3) +
+  scale_fill_viridis("Activity", option = "viridis") +
+  geom_point(data = records_g, fill = NA, col = "white", size = 0.7, alpha = 1, shape = 3) +
   theme_bw(10) + 
   theme(axis.title = element_blank()) + 
     labs(title = 'Glenelg region; red fox; Hour: {frame_time}:00') +
@@ -218,11 +219,11 @@ g_fox_plot_hr <- ggplot(aes(x, y, fill = fox_predicted),
   ease_aes('linear')
 
 # fox plot: spatial difference
-g_fox_plot_diff <- ggplot(aes(x, y, fill = diel_diff),
+g_fox_plot_diff <- ggplot(aes(x, y, fill = diel_diff_pc),
                      data = data_g_plot) +
   geom_tile()+
-  scale_fill_viridis("Relative diel pattern strength", option = "viridis", limits = c(0.5, 1.55), breaks=c(0.5, 1.03, 1.55),labels=c("low", "medium", "high")) +
-  geom_point(data = records_g, fill = NA, col = "white", size = 0.7, alpha = 0.015, shape = 3) +
+  scale_fill_viridis("Relative activity increase (%)", option = "viridis", limits = c(76, 371)) +
+  geom_point(data = records_g, fill = NA, col = "white", size = 0.7, alpha = 1, shape = 3) +
   theme_bw(10) + 
   ggtitle("a.  Glenelg region; red fox") +
   theme(axis.title = element_blank())
@@ -258,21 +259,22 @@ data_o_plot = expand.grid(
 
 # subset to just locations within buffer zone
 data_o_plot = data_o_plot[with(data_o_plot, inSide(otways_buffer_df, x, y)),]
-data_o_plot <- cbind(data_o_plot, predict.gam(gam_fox_sp, newdata = data_o_plot, se.fit = TRUE, type = "link", exclude = c("s(station)", "s(survey_duration)")))
+data_o_plot <- cbind(data_o_plot, predict.gam(gam_fox_sp, newdata = data_o_plot, se.fit = TRUE, type = "response", exclude = c("s(station)", "s(survey_duration)")))
 data_o_plot <- rename(data_o_plot, fox_predicted = fit,  fox_predicted_se = se.fit) # rename
 # give each row / location a unique name to group by
 data_o_plot$location_id <- paste0(data_o_plot$x, "_", data_o_plot$y)
 # get difference in min max diel activity for each row
 data_o_plot <- data_o_plot %>% 
   group_by(location_id) %>% 
-  mutate(diel_diff = max(fox_predicted) - min(fox_predicted))
+  mutate(diel_diff = max(fox_predicted) - min(fox_predicted),
+         diel_diff_pc = diel_diff / min(fox_predicted) * 100)
 
 # fox plot: spatial activity per hour
 o_fox_plot_hr <- ggplot(aes(x, y, fill = fox_predicted),
                      data = data_o_plot) +
   geom_tile()+
-  scale_fill_viridis("log(activity)", option = "viridis", limits = c(-5.27, -1.13)) +
-  geom_point(data = records_o, fill = NA, col = "white", size = 0.7, alpha = 0.1, shape = 3) +
+  scale_fill_viridis("activity", option = "viridis") +
+  geom_point(data = records_o, fill = NA, col = "white", size = 0.7, alpha = 1, shape = 3) +
   theme_bw(10) + 
   theme(axis.title = element_blank()) + 
     labs(title = 'Otway Ranges; red fox; Hour: {frame_time}:00') +
@@ -280,11 +282,11 @@ o_fox_plot_hr <- ggplot(aes(x, y, fill = fox_predicted),
   ease_aes('linear')
 
 # fox plot: spatial difference
-o_fox_plot_diff <- ggplot(aes(x, y, fill = diel_diff),
+o_fox_plot_diff <- ggplot(aes(x, y, fill = diel_diff_pc),
                      data = data_o_plot) +
   geom_tile()+
-  scale_fill_viridis("Relative diel pattern strength", option = "viridis", limits = c(0.5, 1.55), breaks=c(0.5, 1.03, 1.55),labels=c("low", "medium", "high")) +
-  geom_point(data = records_o, fill = NA, col = "white", size = 0.7, alpha = 0.015, shape = 3) +
+  scale_fill_viridis("Relative activity increase (%)", option = "viridis", limits = c(76, 371)) +
+  geom_point(data = records_o, fill = NA, col = "white", size = 0.7, alpha = 1, shape = 3) +
   theme_bw(10) + 
   ggtitle("c.  Otway Ranges; red fox") +
   theme(axis.title = element_blank())
@@ -293,21 +295,22 @@ o_fox_plot_diff <- ggplot(aes(x, y, fill = diel_diff),
 #### CAT 
 ### GLENELG
 # predict model results into dataframe
-data_g_plot <- cbind(data_g_plot, predict.gam(gam_cat_sp, newdata = data_g_plot, se.fit = TRUE, type = "link", exclude = c("s(station)", "s(survey_duration)")))
+data_g_plot <- cbind(data_g_plot, predict.gam(gam_cat_sp, newdata = data_g_plot, se.fit = TRUE, type = "response", exclude = c("s(station)", "s(survey_duration)")))
 data_g_plot <- rename(data_g_plot, cat_predicted = fit,  cat_predicted_se = se.fit) # rename
 # give each row / location a unique name to group by
 data_g_plot$location_id <- paste0(data_g_plot$x, "_", data_g_plot$y)
 # get difference in min max diel activity for each row
 data_g_plot <- data_g_plot %>% 
   group_by(location_id) %>% 
-  mutate(diel_diff = max(cat_predicted) - min(cat_predicted))
+  mutate(diel_diff = max(cat_predicted) - min(cat_predicted),          
+         diel_diff_pc = diel_diff / min(cat_predicted) * 100)
 
 # cat plot: spatial activity per hour
 g_cat_plot_hr <- ggplot(aes(x, y, fill = cat_predicted),
                      data = data_g_plot) +
   geom_tile()+
-  scale_fill_viridis("log(activity)", option = "viridis", limits = c(-5.27, -1.13)) +
-  geom_point(data = records_g, fill = NA, col = "white", size = 0.7, alpha = 0.1, shape = 3) +
+  scale_fill_viridis("Activity", option = "viridis") +
+  geom_point(data = records_g, fill = NA, col = "white", size = 0.7, alpha = 1, shape = 3) +
   theme_bw(10) + 
   theme(axis.title = element_blank()) + 
     labs(title = 'Glenelg region; feral cat; Hour: {frame_time}:00') +
@@ -315,32 +318,33 @@ g_cat_plot_hr <- ggplot(aes(x, y, fill = cat_predicted),
   ease_aes('linear')
 
 # cat plot: spatial difference
-g_cat_plot_diff <- ggplot(aes(x, y, fill = diel_diff),
+g_cat_plot_diff <- ggplot(aes(x, y, fill = diel_diff_pc),
                      data = data_g_plot) +
   geom_tile()+
-  scale_fill_viridis("Relative diel pattern strength", option = "viridis", limits = c(0.5, 1.55), breaks=c(0.5, 1.03, 1.55),labels=c("low", "medium", "high")) +
-  geom_point(data = records_g, fill = NA, col = "white", size = 0.7, alpha = 0.015, shape = 3) +
+  scale_fill_viridis("Relative activity increase (%)", option = "viridis", limits = c(76, 371)) +
+  geom_point(data = records_g, fill = NA, col = "white", size = 0.7, alpha = 1, shape = 3) +
   theme_bw(10) + 
   ggtitle("b.  Glenelg region; feral cat") +
    theme(axis.title = element_blank())
 
 ### OTWAYS
 # predict model results into dataframe
-data_o_plot <- cbind(data_o_plot, predict.gam(gam_cat_sp, newdata = data_o_plot, se.fit = TRUE, type = "link", exclude = c("s(station)", "s(survey_duration)")))
+data_o_plot <- cbind(data_o_plot, predict.gam(gam_cat_sp, newdata = data_o_plot, se.fit = TRUE, type = "response", exclude = c("s(station)", "s(survey_duration)")))
 data_o_plot <- rename(data_o_plot, cat_predicted = fit,  cat_predicted_se = se.fit) # rename
 # give each row / location a unique name to group by
 data_o_plot$location_id <- paste0(data_o_plot$x, "_", data_o_plot$y)
 # get difference in min max diel activity for each row
 data_o_plot <- data_o_plot %>% 
   group_by(location_id) %>% 
-  mutate(diel_diff = max(cat_predicted) - min(cat_predicted))
+  mutate(diel_diff = max(cat_predicted) - min(cat_predicted),          
+         diel_diff_pc = diel_diff / min(cat_predicted) * 100)
 
 # cat plot: spatial activity per hour
 o_cat_plot_hr <- ggplot(aes(x, y, fill = cat_predicted),
                      data = data_o_plot) +
   geom_tile()+
-  scale_fill_viridis("log(activity)", option = "viridis", limits = c(-5.27, -1.13)) +
-  geom_point(data = records_o, fill = NA, col = "white", size = 0.7, alpha = 0.1, shape = 3) +
+  scale_fill_viridis("Activity", option = "viridis") +
+  geom_point(data = records_o, fill = NA, col = "white", size = 0.7, alpha = 1, shape = 3) +
   theme_bw(10) + 
   theme(axis.title = element_blank()) + 
     labs(title = 'Otway Ranges; feral cat; Hour: {frame_time}:00') +
@@ -348,11 +352,11 @@ o_cat_plot_hr <- ggplot(aes(x, y, fill = cat_predicted),
   ease_aes('linear')
 
 # cat plot: spatial difference
-o_cat_plot_diff <- ggplot(aes(x, y, fill = diel_diff),
+o_cat_plot_diff <- ggplot(aes(x, y, fill = diel_diff_pc),
                      data = data_o_plot) +
   geom_tile()+
-  scale_fill_viridis("Relative diel pattern strength", option = "viridis", limits = c(0.5, 1.55), breaks=c(0.5, 1.03, 1.55),labels=c("low", "medium", "high")) +
-  geom_point(data = records_o, fill = NA, col = "white", size = 0.7, alpha = 0.015, shape = 3) +
+  scale_fill_viridis("Relative activity increase (%)", option = "viridis", limits = c(76, 371)) +
+  geom_point(data = records_o, fill = NA, col = "white", size = 0.7, alpha = 1, shape = 3) +
   theme_bw(10) + 
   ggtitle("d.  Otway Ranges; feral cat") +
   theme(axis.title = element_blank())
