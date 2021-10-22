@@ -69,6 +69,8 @@ Planning, Heidelberg, Victoria.
 **Surveys were carried out the traditional lands of the Gunditjmara,
 Gadubanud, Kirrae Wurrung, Gulidjan and Wadawurrung.**
 
+<img src="figs/steph.jpg" width="1024" />
+
 ## Repository structure
 
 **Raw data is contained in the “raw\_data/” folder**.

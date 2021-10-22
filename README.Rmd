@@ -47,6 +47,10 @@ Robley, A., Fanson, B. and Parks Victoria West Coast District Team. (2019). The 
 **Surveys were carried out the traditional lands of the Gunditjmara, Gadubanud, Kirrae Wurrung,  Gulidjan and Wadawurrung.**
 
 
+```{r photo, echo = FALSE}
+knitr::include_graphics("figs/steph.jpg")
+```
+
 ## Repository structure
 
 **Raw data is contained in the "raw_data/" folder**.
