@@ -44,12 +44,12 @@ Robley, A., Moloney, P., Stringer, L. and Donald, S. (2020). Glenelg Ark 2005–
 
 Robley, A., Fanson, B. and Parks Victoria West Coast District Team. (2019). The Otway Ark: response of predators and native species 2016–2018. Arthur Rylah Institute for Environmental Research Technical Report Series No. 299. Department of Environment, Land, Water and Planning, Heidelberg, Victoria.
 
-**Surveys were carried out the traditional lands of the Gunditjmara, Gadubanud, Kirrae Wurrung,  Gulidjan and Wadawurrung.**
-
-
 ```{r photo, echo = FALSE}
 knitr::include_graphics("figs/steph.jpg")
 ```
+
+**Surveys were carried out the traditional lands of the Gunditjmara, Gadubanud, Kirrae Wurrung,  Gulidjan and Wadawurrung.**
+
 
 ## Repository structure
 
