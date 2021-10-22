@@ -34,7 +34,7 @@ I compiled camera-trap data from three distinct studies:
 
 - My PhD surveys 2017 - 2019. 
 
-Funding and support for these surveys came from the University of Melbourne, Conservation Ecology Centre, the Victorian  Government Department of Environment, Land, Water, and Planning, Parks Victoria, Arthur Rylah  Institute for Environmental Research, Parks Victoria. 
+Funding and support for these surveys came from the University of Melbourne, Conservation Ecology Centre, the Victorian  Government Department of Environment, Land, Water, and Planning, Parks Victoria, Arthur Rylah Institute for Environmental Research, Parks Victoria. 
 
 - Glenelg Ark monitoring data 2013 - 2019. 
 
