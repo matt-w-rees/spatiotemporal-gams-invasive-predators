@@ -164,7 +164,7 @@ camdata_o <- filter(camdata, region == "otways")
 plot_diff_g <- ggplot(aes(x, y, fill = diel_diff_pc), data = model_predictions_g) +
    geom_tile() +
    facet_wrap(~species, scales = "free") +
-   scale_fill_viridis("Difference (%) in activity throughout the daiy cycle", option = "viridis") +
+   scale_fill_viridis("Difference (%) in activity throughout the daily cycle", option = "viridis") +
    geom_point(data = camdata_g, fill = NA, col = "white", size = 0.7, alpha = 0.3, shape = 3) +
    theme_bw(10) + 
    ggtitle("Glenelg region") +
@@ -175,7 +175,7 @@ plot_diff_g <- ggplot(aes(x, y, fill = diel_diff_pc), data = model_predictions_g
 plot_diff_o <- ggplot(aes(x, y, fill = diel_diff_pc), data = model_predictions_o) +
   geom_tile() +
   facet_wrap(~species, scales = "free") +
-  scale_fill_viridis("Difference (%) in activity throughout the daiy cycle", option = "viridis") +
+  scale_fill_viridis("Difference (%) in activity throughout the daily cycle", option = "viridis") +
   geom_point(data = camdata_o, fill = NA, col = "white", size = 0.7, alpha = 0.3, shape = 3) +
   theme_bw(10) + 
   ggtitle("Otway Ranges") +
