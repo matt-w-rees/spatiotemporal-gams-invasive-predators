@@ -227,4 +227,84 @@ anim_save("glenelg_predator_activity.gif", animation = last_animation(), path = 
 animate(plot_gif_o, units = "in", width = 10, height = 6,  res = 300)
 anim_save("otways_predator_activity.gif", animation = last_animation(), path = "figs/")
 
+
+
+# FACET - HOUR ------------------------------------------------------------
+# non-gif version for pdf's
+
+## GLENELG
+plot_facet_g_fox <- ggplot(aes(x, y, fill = fit), data = filter(model_predictions_g, species == "Red fox")) +
+  geom_tile() +
+  scale_fill_viridis("Activity", option = "viridis", breaks = c(min(filter(model_predictions_g, species == "Red fox")$fit), max(filter(model_predictions_g, species == "Red fox")$fit)), labels = c("Low", "High")) +
+  geom_point(data = camdata_g, fill = NA, col = "white", size = 0.02, alpha = 0.05, shape = 3) +
+  theme_bw(10) + 
+  ggtitle("Glenelg region: Red fox") + 
+  facet_wrap(~hour) + 
+  theme(axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "bottom")  
+
+
+
+plot_facet_g_cat <- ggplot(aes(x, y, fill = fit), data = filter(model_predictions_g, species == "Feral cat")) +
+  geom_tile() +
+  scale_fill_viridis("Activity", option = "viridis", breaks = c(min(filter(model_predictions_g, species == "Feral cat")$fit), max(filter(model_predictions_g, species == "Feral cat")$fit)), labels = c("Low", "High")) +
+  geom_point(data = camdata_g, fill = NA, col = "white", size = 0.02, alpha = 0.05, shape = 3) +
+  theme_bw(10) + 
+  ggtitle("Glenelg region: Feral cat") + 
+  facet_wrap(~hour) + 
+  theme(axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "bottom")  
+
+
+
+## OTWAYS
+plot_facet_o_fox <- ggplot(aes(x, y, fill = fit), data = filter(model_predictions_o, species == "Red fox")) +
+  geom_tile() +
+  scale_fill_viridis("Activity", option = "viridis", breaks = c(min(filter(model_predictions_o, species == "Red fox")$fit), max(filter(model_predictions_o, species == "Red fox")$fit)), labels = c("Low", "High")) +
+  geom_point(data = camdata_o, fill = NA, col = "white", size = 0.02, alpha = 0.05, shape = 3) +
+  theme_bw(10) + 
+  ggtitle("Otway Ranges: Red fox") + 
+  facet_wrap(~hour) + 
+  theme(axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "bottom")  
+
+
+
+plot_facet_o_cat <- ggplot(aes(x, y, fill = fit), data = filter(model_predictions_o, species == "Feral cat")) +
+  geom_tile() +
+  scale_fill_viridis("Activity", option = "viridis", breaks = c(min(filter(model_predictions_o, species == "Feral cat")$fit), max(filter(model_predictions_o, species == "Feral cat")$fit)), labels = c("Low", "High")) +
+  geom_point(data = camdata_o, fill = NA, col = "white", size = 0.02, alpha = 0.05, shape = 3) +
+  theme_bw(10) + 
+  ggtitle("Otway Ranges: Feral cat") + 
+  facet_wrap(~hour) + 
+  theme(axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "bottom")  
+
+
+# save 
+png("figs/spte_facet_g_fox.png", width = 7.5, height = 10, res = 600, units = "in")
+plot_facet_g_fox
+dev.off()
+
+png("figs/spte_facet_g_cat.png", width = 7.5, height = 10, res = 600, units = "in")
+plot_facet_g_cat
+dev.off()
+
+png("figs/spte_facet_o_fox.png", width = 8, height = 10, res = 600, units = "in")
+plot_facet_o_fox
+dev.off()
+
+png("figs/spte_facet_o_cat.png", width = 8, height = 10, res = 600, units = "in")
+plot_facet_o_cat
+dev.off()
+
+
 # END
