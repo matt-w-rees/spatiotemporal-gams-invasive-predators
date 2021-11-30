@@ -40,14 +40,17 @@ records$habitat_type <- recode_factor(records$habitat_type,  "dry_glenelg" = "Dr
 
 # Changes in spatial activity across the daily cycle ----------------------
 
-gam_fox_sp <- bam(fox ~ t2(x, y, hour, d = c(2, 1), bs = c("ds", "cc"), k = c(80, 8), m = c(1, 0.5), full = TRUE) +
+# specify penalties for 2D Duchon spline and 1D cc spline
+m <- list(c(1,.5),rep(0,0)) 
+
+gam_fox_sp <- bam(fox ~ t2(x, y, hour, d = c(2, 1), bs = c("ds", "cc"), k = c(80, 8), m = m, full = TRUE) +
                         s(foxbaits, bs = "tp", k = 4) + 
                         s(station, bs = "re") +  
                         offset(log(survey_duration)), 
                    data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
 
 
-gam_cat_sp <- bam(cat ~ t2(x, y, hour, d = c(2, 1), bs = c("ds", "cc"), k = c(80, 8), m = c(1, 0.5), full = TRUE) +
+gam_cat_sp <- bam(cat ~ t2(x, y, hour, d = c(2, 1), bs = c("ds", "cc"), k = c(80, 8), m = m, full = TRUE) +
                         s(station, bs = "re") +  
                         offset(log(survey_duration)), 
                   data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
@@ -90,6 +93,27 @@ gam_fox_ht <- bam(fox ~ habitat_type + s(hour, by = habitat_type, bs = "cc", k =
                   data = records, family = nb, knots = list(hour = c(0, 23)), nthreads = 3, discrete = TRUE)
 
 
+
+# Model summary table -----------------------------------------------------
+extract_fits <- function(model, model_name){
+  x <- summary(model)
+  df <- expand.grid(species = as.character(x$formula)[2],
+                    model = model_name,
+                    edf = sum(x$edf),
+                    dev.expl = x$dev.expl,
+                    r.sq = x$r.sq)
+return(df)
+}
+
+summaries <- bind_rows(extract_fits(gam_fox_sp, "1_spatial"),
+                       extract_fits(gam_cat_sp, "1_spatial"),
+                       extract_fits(gam_fox_veg, "2_vegetation_type"),
+                       extract_fits(gam_cat_veg, "2_vegetation_type"),
+                       extract_fits(gam_cat_fox, "3_fox_by_habitat_type"),
+                       extract_fits(gam_fox_ht, "3_habitat_type"))  %>%
+              arrange(species)
+summaries
+write.csv(summaries, "derived_data/model_summaries.csv")
 
 
 

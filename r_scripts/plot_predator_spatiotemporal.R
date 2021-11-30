@@ -6,6 +6,7 @@
 library(gganimate)
 library(sp)
 library(sf)
+library(viridis)
 
 # split records
 records_g <- filter(records, region == "glenelg")
@@ -98,10 +99,10 @@ data_o_plot = data_o_plot[with(data_o_plot, inSide(otways_buffer_df, x, y)),]
 
 ## GLENELG
 # fox
-data_g_plot_fox <- cbind(data_g_plot, predict.gam(gam_fox_sp, newdata = data_g_plot, se.fit = TRUE, type = "response", exclude = c("s(station)", "s(survey_duration)")))
+data_g_plot_fox <- cbind(data_g_plot, predict.gam(gam_fox_sp, newdata = data_g_plot, se.fit = TRUE, type = "response", exclude = c("s(station)")))
 data_g_plot_fox$species <- "fox"
 # cat
-data_g_plot_cat <- cbind(data_g_plot, predict.gam(gam_cat_sp, newdata = data_g_plot, se.fit = TRUE, type = "response", exclude = c("s(station)", "s(survey_duration)")))
+data_g_plot_cat <- cbind(data_g_plot, predict.gam(gam_cat_sp, newdata = data_g_plot, se.fit = TRUE, type = "response", exclude = c("s(station)")))
 data_g_plot_cat$species <- "cat"
 # bind dataframes
 pred_glenelg <- bind_rows(data_g_plot_fox, data_g_plot_cat)
@@ -110,10 +111,10 @@ head(pred_glenelg)
 
 ## OTWAYS
 # fox
-data_o_plot_fox <- cbind(data_o_plot, predict.gam(gam_fox_sp, newdata = data_o_plot, se.fit = TRUE, type = "response", exclude = c("s(station)", "s(survey_duration)")))
+data_o_plot_fox <- cbind(data_o_plot, predict.gam(gam_fox_sp, newdata = data_o_plot, se.fit = TRUE, type = "response", exclude = c("s(station)")))
 data_o_plot_fox$species <- "fox"
 # cat
-data_o_plot_cat <- cbind(data_o_plot, predict.gam(gam_cat_sp, newdata = data_o_plot, se.fit = TRUE, type = "response", exclude = c("s(station)", "s(survey_duration)")))
+data_o_plot_cat <- cbind(data_o_plot, predict.gam(gam_cat_sp, newdata = data_o_plot, se.fit = TRUE, type = "response", exclude = c("s(station)")))
 data_o_plot_cat$species <- "cat"
 # bind dataframes
 pred_otways <- bind_rows(data_o_plot_fox, data_o_plot_cat)
@@ -146,8 +147,8 @@ model_predictions <- model_predictions %>%
 # rename species
 model_predictions$species <- as.factor(model_predictions$species)
 model_predictions$species <- recode_factor(model_predictions$species,  
-                                           "cat" = "Feral cat",
-                                           "fox" = "Red fox")
+                                           "fox" = "Red fox",
+                                           "cat" = "Feral cat")
 
 
 # filter everything to region - currently there is a bug with geom_tile which fucks up faceting by species x region UGH
@@ -305,6 +306,72 @@ dev.off()
 png("figs/spte_facet_o_cat.png", width = 8, height = 10, res = 600, units = "in")
 plot_facet_o_cat
 dev.off()
+
+
+
+# SELECT FACET ------------------------------------------------------------
+# easier comparison of species at a select few hours: 0,6,12,18
+cat_g_select <- filter(model_predictions_g, species == "Feral cat" & (hour == 0 | hour == 6 | hour == 12 | hour == 18))
+fox_g_select <- filter(model_predictions_g, species == "Red fox" & (hour == 0 | hour == 6 | hour == 12 | hour == 18))
+cat_o_select <- filter(model_predictions_o, species == "Feral cat" & (hour == 0 | hour == 6 | hour == 12 | hour == 18))
+fox_o_select <- filter(model_predictions_o, species == "Red fox" & (hour == 0 | hour == 6 | hour == 12 | hour == 18))
+
+plot_facet_select_g_cat <- ggplot(aes(x, y, fill = fit), data = cat_g_select) +
+  geom_tile() +
+  scale_fill_viridis("Activity", option = "viridis") +
+  geom_point(data = camdata_g, fill = NA, col = "white", size = 0.02, alpha = 0.05, shape = 3) +
+  theme_bw(10) + 
+  ggtitle("Glenelg region: Feral cat") + 
+  facet_wrap(~hour, nrow = 1) + 
+  theme(axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "bottom")  
+
+
+plot_facet_select_g_fox <- ggplot(aes(x, y, fill = fit), data = fox_g_select) +
+  geom_tile() +
+  scale_fill_viridis("Activity", option = "viridis") +
+  geom_point(data = camdata_g, fill = NA, col = "white", size = 0.02, alpha = 0.05, shape = 3) +
+  theme_bw(10) + 
+  ggtitle("Glenelg region: Red fox") + 
+  facet_wrap(~hour, nrow = 1) + 
+  theme(axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "bottom")  
+
+
+
+plot_facet_select_o_cat <- ggplot(aes(x, y, fill = fit), data = cat_o_select) +
+  geom_tile() +
+  scale_fill_viridis("Activity", option = "viridis") +
+  geom_point(data = camdata_o, fill = NA, col = "white", size = 0.02, alpha = 0.05, shape = 3) +
+  theme_bw(10) + 
+  ggtitle("Otway Ranges: Feral cat") + 
+  facet_wrap(~hour, nrow = 1) + 
+  theme(axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "bottom")  
+
+
+plot_facet_select_o_fox <- ggplot(aes(x, y, fill = fit), data = fox_o_select) +
+  geom_tile() +
+  scale_fill_viridis("Activity", option = "viridis") +
+  geom_point(data = camdata_o, fill = NA, col = "white", size = 0.02, alpha = 0.05, shape = 3) +
+  theme_bw(10) + 
+  ggtitle("Otway Ranges: Red fox") + 
+  facet_wrap(~hour, nrow = 1) + 
+  theme(axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "bottom")  
+
+
+plot_facet_select_g_cat / plot_facet_select_g_fox 
+
+plot_facet_select_o_cat / plot_facet_select_o_fox
 
 
 # END
