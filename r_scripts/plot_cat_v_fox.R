@@ -72,3 +72,5 @@ plot_fox <- ggplot(aes(hour, fit), data = df_int) +
 png("figs/cat_fox_count.png", width = 9, height = 10, res = 600, units = "in")
 plot_fox / plot_range / plot_wet_lowhigh + plot_annotation(tag_levels = "a")
 dev.off()
+
+# END

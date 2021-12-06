@@ -17,11 +17,10 @@ source("r_scripts/function_clock_time_to_radian.R")
 records <- read.csv("raw_data/predator_records.csv")
 camdata <- read.csv("raw_data/camdata.csv")
 # remove stupid X's
-camdata <- subset(camdata, select = -c(X, X1))
+camdata <- subset(camdata, select = -c(X))
 records <- subset(records, select = -c(X))
 # add camdata info to records - NA for sites without pred detections?
 records <- left_join(records, camdata, by = c("station", "station_year"))
-head(records)
 
 
 # 1) ADD SOLAR TIMES -------------------------------------------------------
