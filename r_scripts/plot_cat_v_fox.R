@@ -7,7 +7,7 @@ df = expand.grid(hour = 0:23,
                  latitude = mean(records$latitude),
                  fox_count_adj = seq(min(records$fox_count_adj), max(records$fox_count_adj), length=150),
                  station = "T052",
-                 survey_duration = mean(records$survey_duration))
+                 survey_duration = 60)
 # predict model results into dataframe
 x = sapply(gam_cat_fox$smooth, "[[",  "label")
 df_int <- cbind(df, predict(gam_cat_fox, newdata = df, se.fit = TRUE, type = "link", exclude = c(x[4:5], "s(survey_duration)")))
@@ -44,7 +44,7 @@ plot_wet_lowhigh <- ggplot(data=df_int_minmax, aes(x=hour, y=fit, group=minmax, 
   scale_color_manual(values = c("dodgerblue", "tomato"), labels = c("Low", "High"), name = "Fox activity") +   
   scale_fill_manual(values = c("dodgerblue", "tomato"), labels = c("Low", "High"), name = "Fox activity") +    
   geom_vline(xintercept = c(6.16,18.34), colour = "black", size = 0.6, linetype="dotted") + 
-  ylab("Effect") + 
+  ylab("log(count)") + 
   xlab("Hour")
 
 
@@ -54,7 +54,7 @@ df = expand.grid(hour = 0:23,
                  habitat_type = levels(records$habitat_type),
                  station = "T052",
                  foxbaits = 0,
-                 survey_duration = mean(records$survey_duration))
+                 survey_duration = 60)
 # predict model results into dataframe
 x = sapply(gam_fox_ht$smooth, "[[",  "label")
 df_int <- cbind(df, predict(gam_fox_ht, newdata = df, se.fit = TRUE, type = "link", exclude = c(x[4:8], "s(survey_duration)")))
@@ -65,7 +65,7 @@ plot_fox <- ggplot(aes(hour, fit), data = df_int) +
   ggtitle("", subtitle = "Red Fox") +
   geom_ribbon(aes(ymin=(fit-2*se.fit), ymax=(fit+2*se.fit)), alpha=0.2) +
   geom_vline(xintercept = c(6.16,18.34), colour = "black", size = 0.6, linetype="dotted") + 
-  ylab("Effect") + 
+  ylab("log(count)") + 
   xlab("Hour")
 
 #  save

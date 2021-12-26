@@ -14,16 +14,15 @@ knitr::opts_chunk$set(
 
 This repository contains the data and code of my fourth PhD data chapter. 
 
-Here, I've built generalised additive models ('GAMs'), using the ['mgcv' R-package](https://cran.r-project.org/web/packages/mgcv/mgcv.pdf), of invasive predator spatiotemporal activity in south-west Victoria, Australia. 
+Here I've built generalised additive models ('GAMs'), using the ['mgcv' R-package](https://cran.r-project.org/web/packages/mgcv/mgcv.pdf), of invasive predator spatiotemporal activity in south-west Victoria, Australia. 
 
-This paper is somewhat split between an exploratory analysis of the different ways GAMs can be used to jointly model spatial and diel activity, and aiming to provide inference on the drivers of invasive predator spatiotemporal activity in temperate, heterogeneous landscapes. Particularly whether a subordinate mesopredator (feral cat *Felis catus*) exhibits (signs of) behavioural avoidance of an apex predator (Red fox *Vulpes vulpes*). 
+This paper aims to provide inference on the drivers of invasive predator spatiotemporal activity in temperate, heterogeneous landscapes. Particularly whether a subordinate mesopredator (feral cat *Felis catus*) exhibits (signs of) behavioural avoidance of an apex predator (Red fox *Vulpes vulpes*). 
 
-There are four main model types, differing in how the hourly smooth was specified:
+There are three model types, differing in how the hourly smooth was specified:
 
 1. Predator activity across space (tensor product of hour and coordinates)
 2. Predator activity across vegetation types (hierarchical model of hour x vegetation type)
 3. Feral cat activity potential avoidance of foxes (tensor product of hour and coordinates)
-4. Variation in diel activity of feral cats (hierarchical model of hour x individual ID)
 
 
 ## Acknowledgements
@@ -48,7 +47,7 @@ Robley, A., Fanson, B. and Parks Victoria West Coast District Team. (2019). The 
 knitr::include_graphics("figs/steph.jpg")
 ```
 
-**Surveys were carried out the traditional lands of the Gunditjmara, Gadubanud, Kirrae Wurrung,  Gulidjan and Wadawurrung.**
+**Surveys were carried out the traditional lands of the Gunditjmara and Eastern Maar.**
 
 
 ## Repository structure
@@ -57,15 +56,14 @@ knitr::include_graphics("figs/steph.jpg")
 
 - *"predator_records.csv"* has a row for every cat and fox camera-trap detection (no time separation between consecutive detections). 
 - *"camdata.csv"* contains camera-trap deployment information and explanatory variables. Note that there are plenty of camera-traps which were deployed but did not detect predators - predator_records and camdata need to be merged to account for absences. 
-- *"cat_id_detections.csv"* has a row for every cat detection for surveys in which cats were individually identified (also includes unmarked and unidentifiable cats). This is a subset of the data used in the other models, and a subset of the data used in another PhD chapter:  https://github.com/matt-w-rees/invasive-mesopredator-release (minus the Lower Glenelg National Park cats - I didn't have the detection times for these cats on-hand). 
 
 **R scripts are contained in the "r_scripts/" folder**.
 
 - script and function to fit lorelograms using adapted code from [Iannarilli et al. 2019](https://doi.org/10.1111/2041-210X.13308) are contained in the *"/lorelograms"* folder. This was an exploratory analysis to choose the best time-to-indepence for consecutive detections of species on each camera-trap (I chose 30 mins). This involves creating a minute by minute detection history so is computationally intensive.
 - *"format_records_hour_gams.R"* reformats the raw data files into a usable dataframe for spatiotemporal GAMs. This accounts for solar times using [average double anchorage methods](https://doi.org/10.1111/2041-210X.13290), removes non-indepedent detections (within 30 mins) and reshapes into a dataframe where, for each camera-trap, there are 0 - 23 rows for hour of the day, a column for cat and fox filled with the number of 'independent' detections in each hour, as well as columns for deployment information and explanatory variables. This dataframe is saved at **"derived_data/predator_counts_hour.csv"**. 
 - *"models.R"* uses mgcv to fit GAMs
-- scripts beginning with *"plot_"* contain code used to create the figures with ggplot. These scripts require the *"models"* script to be run first in the same session. 
-- *"individual_cats_reformat_model_plots.R"* reformats "cat_id_detections.csv" into a dataframe, runs heirarchical GAMs for each cat / cat category, and creates the figures (yeah this was a bit of an afterthought). 
+- scripts beginning with *"plot_"* contain code used to create the figures. These scripts require the *"models"* script to be run first in the same session. 
+- *"individual_cats_reformat_model_plots.R"* reformats "cat_id_detections.csv" into a dataframe, runs heirarchical GAMs for each cat / cat category, and creates the figures (not included in the paper). 
 
 **Figures for the manuscript are contained in the "figs/" folder**.
 

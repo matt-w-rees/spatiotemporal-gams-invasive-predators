@@ -14,11 +14,11 @@ gam_plot <- function(gam_model, data){
                     vegetation_group = levels(data$vegetation_group),
                     foxbaits = 0, 
                     region = c("glenelg", "otways"),
-                    survey_duration = mean(data$survey_duration))
+                    survey_duration = 60)
   # get smooths to exlude
   x = sapply(gam_model$smooth, "[[",  "label")
   # predict model estimates (and uncertainty) into this dataframe, excluding the impact of variables other than hour:
-  df <- cbind(df, predict.gam(gam_model, newdata = df, se.fit = TRUE, type = "link", newdata.guaranteed = TRUE, exclude = c(x[3:7], "s(survey_duration)")))
+  df <- cbind(df, predict.gam(gam_model, newdata = df, se.fit = TRUE, type = "link", newdata.guaranteed = TRUE, exclude = c(x[3:7])))
   plot_veg <- ggplot(data=df, aes(x=hour, y=fit, group=vegetation_group)) +
     # ylim(-13, -2) +
     geom_line(aes(y=fit, x=hour), lwd = 0.7) +

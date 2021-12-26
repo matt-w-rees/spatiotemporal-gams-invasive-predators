@@ -124,6 +124,7 @@ library(patchwork)
 library(ggpubr)
 library(viridis)
 library(gratia)
+library(forcats)
 
 # Set the default theme for ggplot objects 
 theme_set(theme_bw())
