@@ -10,10 +10,9 @@ records <- read.csv("derived_data/predator_counts_hour.csv")
 
 # Transform variables -----------------------------------------------------
 
-# new variable for fox counts adjusted for (log) survey effort (for presences only - we don't want negative counts)
-records$fox_count_adj <- ifelse(records$fox_count > 0, records$fox_count/log(records$survey_duration), records$fox_count)
-
-# take log 
+# new variable for fox counts adjusted for survey effort 
+records$fox_count_adj <- records$fox_count / records$survey_duration
+# cats more likely care about fox activity on the log scale
 records$fox_count_adj <- log(records$fox_count_adj + 1)
 
 ## Transform variable class  for GAMs
