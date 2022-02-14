@@ -317,6 +317,32 @@ plot_facet_o_cat
 dev.off()
 
 
+# PLOT INTERACTION AS GIFS ------------------------------------------------
+# additional packages
+library(gganimate)
+
+# otways
+plot_gif_o <- ggplot(aes(x, y, fill = fit_int), data = model_predictions_o) +
+  geom_tile() +
+  scale_fill_viridis("Change from average diel pattern (log[count])", option = "viridis") +
+  geom_point(data = camdata_o, fill = NA, col = "white", size = 0.7, alpha = 1, shape = 3) +
+  theme_bw(10) + 
+  facet_wrap(~species, scales = "free") + 
+  theme(axis.title = element_blank(),
+        legend.position = "bottom") +  
+  labs(title = 'Hour: {frame_time}:00') +
+  transition_time(hour) +
+  ease_aes('linear')
+
+
+# save gif
+animate(plot_gif_o, units = "in", width = 10, height = 5,  res = 200)
+anim_save("otways_interaction.gif", animation = last_animation(), path = "figs/")
+
+
+
+
+
 # PLOT MARGINAL SPACE -----------------------------------------------------
 
 ## GLENELG

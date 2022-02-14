@@ -18,7 +18,7 @@ plot_range <- ggplot(aes(hour, fox_count_adj, fill = fit), data = df_int) +
   scale_fill_viridis("Cat activity", option = "viridis", breaks = c(-5, -3), labels = c("Low", "High")) + 
   ggtitle("", subtitle = "Feral cat") +
   geom_vline(xintercept = c(6.16,18.34), colour = "black", size = 0.6, linetype="dotted") + 
-  scale_y_continuous(breaks=c(0, 3), labels = c("Low", "High")) +
+  scale_y_continuous(breaks=c(min(records$fox_count_adj), max(records$fox_count_adj)), labels = c("Low", "High")) +
   ylab("Fox activity") + 
   xlab("Hour") 
 
@@ -71,6 +71,20 @@ plot_fox <- ggplot(aes(hour, fit), data = df_int) +
 #  save
 png("figs/cat_fox_count.png", width = 9, height = 10, res = 600, units = "in")
 plot_fox / plot_range / plot_wet_lowhigh + plot_annotation(tag_levels = "a")
+dev.off()
+
+
+# for slides
+png("figs/cat_fox_count_pres1.png", width = 7.2, height = 5, res = 600, units = "in")
+plot_fox / plot_spacer() + plot_annotation(tag_levels = "a")
+dev.off()
+  
+png("figs/cat_fox_count_pres2.png", width = 7.2, height = 5.5, res = 600, units = "in")
+plot_fox / plot_range + plot_annotation(tag_levels = "a")
+dev.off()
+
+png("figs/cat_fox_count_pres3.png", width = 7.2, height = 5.5, res = 600, units = "in")
+plot_fox / plot_wet_lowhigh + plot_annotation(tag_levels = "a")
 dev.off()
 
 # END
