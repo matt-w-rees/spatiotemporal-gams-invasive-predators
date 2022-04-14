@@ -27,15 +27,7 @@ specified:
 3.  Feral cat activity potential avoidance of foxes (tensor product of
     hour and coordinates)
 
-## Acknowledgements
-
-The idea to use GAMs for this chapter came from Prof. Nick Golding -
-Nick also wrote me some initial simulation code and helped me get
-started with GAMs. I also learnt most of these methods and gained
-inspiration from [online course
-materials](https://noamross.github.io/mgcv-esa-2018/) and [this paper on
-heirarchical GAMs](https://peerj.com/articles/6876/) from Noam Ross,
-Gavin Simpson, David Miller and Eric Pedersen.
+## Data sources
 
 I compiled camera-trap data from three distinct studies:
 
