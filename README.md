@@ -6,20 +6,18 @@
 This repository contains the data and code of my fourth PhD data
 chapter.
 
-Here, I’ve built generalised additive models (‘GAMs’), using the [‘mgcv’
+Here I’ve built generalised additive models (‘GAMs’), using the [‘mgcv’
 R-package](https://cran.r-project.org/web/packages/mgcv/mgcv.pdf), of
 invasive predator spatiotemporal activity in south-west Victoria,
 Australia.
 
-This paper is somewhat split between an exploratory analysis of the
-different ways GAMs can be used to jointly model spatial and diel
-activity, and aiming to provide inference on the drivers of invasive
-predator spatiotemporal activity in temperate, heterogeneous landscapes.
+This paper aims to provide inference on the drivers of invasive predator
+spatiotemporal activity in temperate, heterogeneous landscapes.
 Particularly whether a subordinate mesopredator (feral cat *Felis
 catus*) exhibits (signs of) behavioural avoidance of an apex predator
 (Red fox *Vulpes vulpes*).
 
-There are four main model types, differing in how the hourly smooth was
+There are three model types, differing in how the hourly smooth was
 specified:
 
 1.  Predator activity across space (tensor product of hour and
@@ -28,8 +26,6 @@ specified:
     hour x vegetation type)
 3.  Feral cat activity potential avoidance of foxes (tensor product of
     hour and coordinates)
-4.  Variation in diel activity of feral cats (hierarchical model of hour
-    x individual ID)
 
 ## Acknowledgements
 
@@ -45,10 +41,10 @@ I compiled camera-trap data from three distinct studies:
 
   - My PhD surveys 2017 - 2019.
 
-Funding and support for these surveys came from the Conservation Ecology
-Centre, the Victorian Government Department of Environment, Land, Water,
-and Planning, Parks Victoria, Arthur Rylah Institute for Environmental
-Research, Parks Victoria.
+Funding and support for these surveys came from the University of
+Melbourne, Conservation Ecology Centre, the Victorian Government
+Department of Environment, Land, Water, and Planning, Parks Victoria,
+Arthur Rylah Institute for Environmental Research, Parks Victoria.
 
   - Glenelg Ark monitoring data 2013 - 2019.
 
@@ -66,10 +62,10 @@ Robley, A., Fanson, B. and Parks Victoria West Coast District Team.
 Report Series No. 299. Department of Environment, Land, Water and
 Planning, Heidelberg, Victoria.
 
-**Surveys were carried out the traditional lands of the Gunditjmara,
-Gadubanud, Kirrae Wurrung, Gulidjan and Wadawurrung.**
-
 <img src="figs/steph.jpg" width="1024" />
+
+**Surveys were carried out the traditional lands of the Gunditjmara and
+Eastern Maar.**
 
 ## Repository structure
 
@@ -82,14 +78,6 @@ Gadubanud, Kirrae Wurrung, Gulidjan and Wadawurrung.**
     explanatory variables. Note that there are plenty of camera-traps
     which were deployed but did not detect predators - predator\_records
     and camdata need to be merged to account for absences.
-  - *“cat\_id\_detections.csv”* has a row for every cat detection for
-    surveys in which cats were individually identified (also includes
-    unmarked and unidentifiable cats). This is a subset of the data used
-    in the other models, and a subset of the data used in another PhD
-    chapter:
-    <https://github.com/matt-w-rees/invasive-mesopredator-release>
-    (minus the Lower Glenelg National Park cats - I didn’t have the
-    detection times for these cats on-hand).
 
 **R scripts are contained in the “r\_scripts/” folder**.
 
@@ -112,12 +100,12 @@ Gadubanud, Kirrae Wurrung, Gulidjan and Wadawurrung.**
     saved at **“derived\_data/predator\_counts\_hour.csv”**.
   - *“models.R”* uses mgcv to fit GAMs
   - scripts beginning with *“plot\_”* contain code used to create the
-    figures with ggplot. These scripts require the *“models”* script to
-    be run first in the same session.
+    figures. These scripts require the *“models”* script to be run first
+    in the same session.
   - *“individual\_cats\_reformat\_model\_plots.R”* reformats
     “cat\_id\_detections.csv” into a dataframe, runs heirarchical GAMs
-    for each cat / cat category, and creates the figures (yeah this was
-    a bit of an afterthought).
+    for each cat / cat category, and creates the figures (not included
+    in the paper).
 
 **Figures for the manuscript are contained in the “figs/” folder**.
 
