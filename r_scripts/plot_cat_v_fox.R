@@ -15,6 +15,7 @@ df_int <- cbind(df, predict(gam_cat_fox, newdata = df, se.fit = TRUE, type = "li
 plot_range <- ggplot(aes(hour, fox_count_adj, fill = fit), data = df_int) +
   geom_tile() +
   facet_wrap(~habitat_type, nrow =1) +
+  geom_contour(aes(z = fit, fill = NULL), colour = "grey40", bins = 10) +
   scale_fill_viridis("Cat activity", option = "viridis", breaks = c(-5, -3), labels = c("Low", "High")) + 
   ggtitle("", subtitle = "Feral cat") +
   geom_vline(xintercept = c(6.16,18.34), colour = "black", size = 0.6, linetype="dotted") + 
@@ -40,7 +41,7 @@ plot_wet_lowhigh <- ggplot(data=df_int_minmax, aes(x=hour, y=fit, group=minmax, 
   geom_line(aes(y=fit, x=hour), lwd = 1.2) +
   facet_wrap(~habitat_type, nrow =1) +
   ggtitle("", subtitle = "Feral cat") +
-  geom_ribbon(aes(ymin=(fit-2*se.fit), ymax=(fit+2*se.fit), fill = minmax), alpha=0.2) +
+  geom_ribbon(aes(ymin=(fit-1.96*se.fit), ymax=(fit+1.96*se.fit), fill = minmax), alpha=0.2) +
   scale_color_manual(values = c("dodgerblue", "tomato"), labels = c("Low", "High"), name = "Fox activity") +   
   scale_fill_manual(values = c("dodgerblue", "tomato"), labels = c("Low", "High"), name = "Fox activity") +    
   geom_vline(xintercept = c(6.16,18.34), colour = "black", size = 0.6, linetype="dotted") + 
@@ -54,16 +55,17 @@ df = expand.grid(hour = 0:23,
                  habitat_type = levels(records$habitat_type),
                  station = "T052",
                  foxbaits = 0,
+                 region = c("glenelg"),
                  survey_duration = 60)
 # predict model results into dataframe
 x = sapply(gam_fox_ht$smooth, "[[",  "label")
-df_int <- cbind(df, predict(gam_fox_ht, newdata = df, se.fit = TRUE, type = "link", exclude = c(x[4:8], "s(survey_duration)")))
+df_int <- cbind(df, predict(gam_fox_ht, newdata = df, se.fit = TRUE, type = "link", exclude = c(x[4:5], "s(survey_duration)")))
 # plot
 plot_fox <- ggplot(aes(hour, fit), data = df_int) +
   geom_line(aes(y=fit, x=hour), lwd = 1.2) +
   facet_wrap(~habitat_type, nrow =1) +
   ggtitle("", subtitle = "Red Fox") +
-  geom_ribbon(aes(ymin=(fit-2*se.fit), ymax=(fit+2*se.fit)), alpha=0.2) +
+  geom_ribbon(aes(ymin=(fit-1.96*se.fit), ymax=(fit+1.96*se.fit)), alpha=0.2) +
   geom_vline(xintercept = c(6.16,18.34), colour = "black", size = 0.6, linetype="dotted") + 
   ylab("log(count)") + 
   xlab("Hour")
@@ -73,18 +75,5 @@ png("figs/cat_fox_count.png", width = 9, height = 10, res = 600, units = "in")
 plot_fox / plot_range / plot_wet_lowhigh + plot_annotation(tag_levels = "a")
 dev.off()
 
-
-# for slides
-png("figs/cat_fox_count_pres1.png", width = 7.2, height = 5, res = 600, units = "in")
-plot_fox / plot_spacer() + plot_annotation(tag_levels = "a")
-dev.off()
-  
-png("figs/cat_fox_count_pres2.png", width = 7.2, height = 5.5, res = 600, units = "in")
-plot_fox / plot_range + plot_annotation(tag_levels = "a")
-dev.off()
-
-png("figs/cat_fox_count_pres3.png", width = 7.2, height = 5.5, res = 600, units = "in")
-plot_fox / plot_wet_lowhigh + plot_annotation(tag_levels = "a")
-dev.off()
 
 # END

@@ -88,7 +88,7 @@ gam_cat_fox <- bam(cat ~ habitat_type +
 
 # Fox activity in each habitat type ----------------------
 gam_fox_ht <- bam(fox ~ habitat_type + s(hour, by = habitat_type, bs = "cc", k = 8) + 
-                        s(foxbaits, region, bs = "fs", xt = list(bs = "tp"), k = 4) + 
+                        s(foxbaits, bs = "tp", k = 4) + 
                         s(station, bs = "re") +  
                         offset(log(survey_duration)), 
                   data = records, family = nb, knots = list(hour = c(0, 23)), discrete = TRUE)

@@ -3,8 +3,7 @@
 
 ## Overview
 
-This repository contains the data and code of my fourth PhD data
-chapter.
+This repository contains the data and code used in the manuscript 'Spatial variation in predator diel activity patterns'. 
 
 Here I’ve built generalised additive models (‘GAMs’), using the [‘mgcv’
 R-package](https://cran.r-project.org/web/packages/mgcv/mgcv.pdf), of
@@ -16,48 +15,6 @@ spatiotemporal activity in temperate, heterogeneous landscapes.
 Particularly whether a subordinate mesopredator (feral cat *Felis
 catus*) exhibits (signs of) behavioural avoidance of an apex predator
 (Red fox *Vulpes vulpes*).
-
-There are three model types, differing in how the hourly smooth was
-specified:
-
-1.  Predator activity across space (tensor product of hour and
-    coordinates)
-2.  Predator activity across vegetation types (hierarchical model of
-    hour x vegetation type)
-3.  Feral cat activity potential avoidance of foxes (tensor product of
-    hour and coordinates)
-
-## Data sources
-
-I compiled camera-trap data from three distinct studies:
-
-  - My PhD surveys 2017 - 2019.
-
-Funding and support for these surveys came from the University of
-Melbourne, Conservation Ecology Centre, the Victorian Government
-Department of Environment, Land, Water, and Planning, Parks Victoria,
-Arthur Rylah Institute for Environmental Research, Parks Victoria.
-
-  - Glenelg Ark monitoring data 2013 - 2019.
-
-Robley, A., Moloney, P., Stringer, L. and Donald, S. (2020). Glenelg Ark
-2005–2019: long-term predator and native mammal response to predator
-control. Arthur Rylah Institute for Environmental Research Technical
-Report Series No. 318. Department of Environment, Land, Water and
-Planning, Heidelberg, Victoria.
-
-  - Otway Ark monitoring data 2016 - 2018.
-
-Robley, A., Fanson, B. and Parks Victoria West Coast District Team.
-(2019). The Otway Ark: response of predators and native species
-2016–2018. Arthur Rylah Institute for Environmental Research Technical
-Report Series No. 299. Department of Environment, Land, Water and
-Planning, Heidelberg, Victoria.
-
-<img src="figs/steph.jpg" width="1024" />
-
-**Surveys were carried out the traditional lands of the Gunditjmara and
-Eastern Maar.**
 
 ## Repository structure
 
@@ -73,13 +30,6 @@ Eastern Maar.**
 
 **R scripts are contained in the “r\_scripts/” folder**.
 
-  - script and function to fit lorelograms using adapted code from
-    [Iannarilli et al. 2019](https://doi.org/10.1111/2041-210X.13308)
-    are contained in the *“/lorelograms”* folder. This was an
-    exploratory analysis to choose the best time-to-indepence for
-    consecutive detections of species on each camera-trap (I chose 30
-    mins). This involves creating a minute by minute detection history
-    so is computationally intensive.
   - *“format\_records\_hour\_gams.R”* reformats the raw data files into
     a usable dataframe for spatiotemporal GAMs. This accounts for solar
     times using [average double anchorage
@@ -94,19 +44,6 @@ Eastern Maar.**
   - scripts beginning with *“plot\_”* contain code used to create the
     figures. These scripts require the *“models”* script to be run first
     in the same session.
-  - *“individual\_cats\_reformat\_model\_plots.R”* reformats
-    “cat\_id\_detections.csv” into a dataframe, runs heirarchical GAMs
-    for each cat / cat category, and creates the figures (not included
-    in the paper).
+
 
 **Figures for the manuscript are contained in the “figs/” folder**.
-
-## GIFs of Invasive predator spatiotemporal activity:
-
-#### Glenelg region
-
-![](figs/glenelg_predator_activity.gif)<!-- -->
-
-#### Otway Ranges
-
-![](figs/otways_predator_activity.gif)<!-- -->
