@@ -1,0 +1,378 @@
+---
+title: Dynamic shifts in predator diel activity patterns across landscapes and threat levels
+author:
+  - name: Matthew W. Rees
+    email: matt.wayne.rees@gmail.com
+    affiliation: UOM,CSIRO
+    correspondingauthor: true
+  - name: Brendan A. Wintle
+    affiliation: UOM
+  - name: Jack H. Pascoe
+    affiliation: UOM,CEC
+  - name: Mark Le Pla
+    affiliation: UOM,CEC
+  - name: Emma K. Birnbaum
+    affiliation: CEC
+  - name: Bronwyn A. Hradsky
+    affiliation: UOM
+address:
+  - code: UOM
+    address: Quantitative and Applied Ecology Group, School of Agriculture, Food and Ecosystem Sciences, The University of Melbourne, Parkville, VIC, 3010, Australia
+  - code: CSIRO
+    address: Health and Biosecurity, Commonwealth Scientific and Industrial Research Organisation, Ecosciences Precinct, Dutton Park, QLD, Australia
+  - code: CEC 
+    address: Conservation Ecology Centre, Lighthouse Rd, Cape Otway, VIC, 3233, Australia
+abstract: |
+keywords: 
+  - diel activity patterns 
+  - generalised additive model
+  - feral cat
+  - invasive predator
+  - intraguild predator interactions
+  - lethal predator control
+  - mesopredator release
+  - red fox
+  - spatiotemporal model
+journal: "Oikos; Article"
+date: "`r Sys.Date()`"
+classoption: preprint, 3p, authoryear
+bibliography: "thesis-copy.bib"
+header-includes:
+  - \usepackage{setspace}\doublespacing
+  - \usepackage{lineno}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \newcommand{\beginsupplement}{\setcounter{table}{0}  \renewcommand{\thetable}{S\arabic{table}} \setcounter{figure}{0} \renewcommand{\thefigure}{S\arabic{figure}} \setcounter{section}{0} \renewcommand{\thesection}{S\arabic{section}}}
+  - \usepackage{pdflscape}
+  - \newcommand{\blandscape}{\begin{landscape}}
+  - \newcommand{\elandscape}{\end{landscape}}
+linenumbers: false
+numbersections: true
+# Use a CSL with `citation_package = "default"`
+csl: "ecography.csl"
+fontsize: 12pt
+output:
+  bookdown::pdf_book:
+    base_format: rticles::elsevier_article
+    keep_tex: true
+    citation_package: default
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo      = FALSE,
+  warning   = FALSE,
+  message   = FALSE,
+  error     = FALSE,
+  cache     = FALSE,
+  fig.path  = "",
+  fig.align = "center",
+  out.width = "80%")
+
+library(kableExtra)
+library(dplyr)
+library(readr)
+
+```
+
+
+```{=tex}
+\parskip=12pt 
+\newpage
+\setcounter{page}{1}
+```
+
+
+$~$
+
+\linenumbers
+
+# ABSTRACT {.unnumbered}
+
+Understanding the constraints dominant predators impose on subordinate species is important for predicting ecosystem dynamics and anticipating outcomes of predator management. Subordinate predators may avoid dominant predators in time or space, making it difficult to quantify antipredator behaviours unless joint spatiotemporal analyses are used.
+Here, we tested whether an invasive dominant predator (red fox *Vulpes vulpes*) alters the spatiotemporal activity of an invasive subordinate predator (feral cat *Felis catus*). We collated records of both species from 3,667 camera-traps deployed experimentally across two regions of south-eastern Australia with simplified predator guilds. Foxes were poison-baited in some landscapes within each region. We used generalised additive models to quantify changes in predator spatiotemporal activity across geographic space, vegetation types, human footprint and (artificially manipulated) gradients of dominant predator activity.
+Foxes and cats had similar diel activity patterns when averaged across all sites, however there was important differentiation at a finer scale---cats did not reduce their spatial activity but shifted diel patterns when localised fox activity was high. Cats were crepuscular on average. However, across dry vegetation types of both regions (where foxes were nocturnal), cats shifted to diurnal behaviour with increasing fox activity. In contrast, fox activity was relatively consistent throughout the daily cycle in the wet forest; here cats avoided dawn when fox activity was high. Changes in cat diel activity patterns may facilitate spatial coexistence between these two invasive predators, potentially shifting feral cat impacts onto different native prey.
+It is well-appreciated that predator activity varies spatially and fluctuates throughout the daily cycle. However, our study demonstrates that diel activity patterns also vary across space, likely mediated by both landscape-context and fear. Dominant predator avoidance in time appears to be spatially dynamic---a key nuance which is overlooked when simply comparing the average activity overlap between two species.
+
+\newpage
+
+# INTRODUCTION
+Top predators can drive ecosystem structure and dynamics by suppressing populations of rival predators and prey species [@estes2011trophic; @prugh2009rise]. Dominant predators can suppress subordinate species directly through antagonistic interactions and predation, as well as indirectly through fear [@creel2008relationships]. Fear-induced behavioural suppression can be as detrimental to subordinate species as predation itself, by limiting resource acquisition and breeding success [@schmitz2004trophic; @preisser2005scared; @brown1999ecology]. Understanding how top predators&mdash;including humans&mdash;constrain the behaviour of subordinate species is therefore important to accurately predict consequences of predator management, such as reintroductions or lethal control [@gaynor2021applied].
+
+Spatial and/or temporal niche partitioning may allow subordinate species to coexist with top predators by reducing encounter-rates and resource overlap [@kronfeld2003partitioning]. However, subordinate species may not consistently employ avoidance behaviours because perceived predation risk is spatiotemporally variable, and antipredator behaviours typically involve a trade-off against resource acquisition, such as limiting or relegating activity to suboptimal places or times [@lima1999temporal; @lima1990behavioral]. Therefore, optimal predator avoidance strategies likely vary across heterogeneous landscapes where resource availability (e.g., shelter, food) and perceived predation risks differ [@kauffman2007landscape; @willems2009predator; @wirsing2021context; @davies2021spatial; @gaynor2018influence]. For example, temporal predator avoidance may be preferable over spatial avoidance if food is constantly available throughout the day, and vice versa. These theories are unified under the ecology of fear concept [@brown1999ecology], which has gained increasing attention in recent times [@gaynor2019landscapes]. However, there remains a lack of robust, empirical evidence documenting dynamic changes in antipredator behaviour [@gilbert2022daily].
+
+Animal diel activity patterns are increasingly being considered alongside spatial activity and distributional patterns. However, spatial and temporal (in regard to the daily cycle) activity patterns are still often considered in an ad-hoc fashion. For example, by fitting separate models for spatial and temporal overlap, or by repeating spatial analyses (e.g., resource selection functions) at different time periods such night and day [e.g., @basille2015plastic; @kohl2019prey; @smith2019integrating; @wooster2022predator]. Such approaches make it difficult to assess the relative importance, as well as dynamic changes in spatial and temporal processes.
+
+There are many approaches to modelling intraguild spatiotemporal interactions, such as time-to-encounter models and coefficients of activity overlap [@frey2017investigating]. Time-to-encounter approaches consider fine-scale avoidance or attraction by using time intervals between species detections as the response variable, but do not estimate diel activity patterns [@harmsen2009spatial; @niedballa2019assessing; @fancourt2019introduced]. Multispecies models have been recently developed to assess overlap in spatial and diel activity between two species [@azzou2021sparse], as well as different diel activity patterns based on the presence or absence of another species at a site [@kellner2022two]. Multispecies models are data-hungry and difficult to fit, but can account for imperfect detection and different types of predictor variables [e.g., @parsons2022effect]. Given avoidance behaviours are likely dynamic [@gaynor2019landscapes], there is need for statistical approaches which jointly assess continuous shifts in spatial and diel activity patterns of one species in response to another, particularly when combined with experimental data [@suraci2022beyond].
+
+Generalised Additive Models (hereafter 'GAMs') are increasingly being used to estimate animal diel activity patterns and offer a flexible framework to jointly consider spatial activity. GAMs are useful for modelling diel activity patterns as they can implement cyclical splines, which join the end of the one day with the start of the following day. GAMs can also include complexity penalties to reduce overfitting; these penalties can reduce complex nonlinear (i.e., wiggly) smooths to linear effects or even remove the effect from the model if it is not statistically supported, avoiding the need for additional tests of statistical significance (such as p-values and information criteria). GAMS can also capture nonlinear interactions between two variables with different units (i.e., 'tensor products'), and offer the ability to share information across categorical variables through hierarchical specifications [@wood2017generalized; @pedersen2019hierarchical]. However, we are only aware of one other study that has used a GAM to explore how animal diel activity interacts with predation risk as a continuous variable: @cunningham2019temporal used this approach to document shifts in diel activity patterns of mammal communities following decline in a top predator (although without also considering spatial animal activity). 
+
+Invasive predators are often lethally controlled to protect native competitor and prey species; however, the conservation benefits of invasive predator control may be dampened if this benefits other invasive species [@takimoto2022simple; @doherty2017stop]. The red fox *Vulpes vulpes* (hereafter 'fox') and feral cat *Felis catus* (hereafter 'cat') have had devastating impacts on native prey throughout their introduced range, and are implicated in the extinction of \~10 and 63 species worldwide, respectively [@doherty2016invasive]. The impacts of these invasive predators are particularly extreme on the Australian continent [@woinarski2015ongoing]. Cats are more difficult to manage, and so introduced predator control programs in Australia often target only foxes [particularly through poison-baiting, @reddiex2007control]. As foxes and cats compete for many of the same resources [@fleming2022distinctive], there is concern that lethal fox control could cause mesopredator release [@soule1988reconstructed] of cats [@glen2005complex; @wayne2017recoveries]. While there is evidence that foxes may suppress cat density and alter movement behaviour [@molsher2017mesopredator; @rees2023mesopredator], potential changes in cat diel activity have been relatively rarely studied [although see @roshier2021space]. Changes in predator diel activity patterns may lead to changes in population-level fitness, as well as hunting success and primary prey species [@allen2022fear; @suraci2016fear]. 
+
+In this study, we first explored (1) how predator diel activity patterns vary across geographic space ('model 1'), and (2) the role of vegetation type and human footprint in predator activity patterns ('model 2'). Using this knowledge to partition our dataset, we then (3) tested whether the activity of a dominant predator (fox) affected the spatiotemporal activity of a subordinate predator (cat; 'model 3'). In line with behavioural avoidance or exclusion, we predicted that cat diel activity pattens would shift towards less-risky times of day (i.e., times when fox activity was lower), and/or spatial cat activity would be lower at sites where fox activity was relatively high. We illustrate how GAMs can provide a simple framework to jointly assess spatial and temporal animal activity patterns, as well as potential species interactions. 
+
+\newpage
+
+# MATERIALS AND METHODS
+
+## Study area and camera-trapping
+Our study was conducted in a simple predator system where foxes and cats are the only medium-large (> 1 kg) mammalian predators, and fox activity is manipulated using lethal control in some landscapes. This situation allowed sole focus on the interactions between these two predators, across an experimental gradient of dominant predator (fox) activity. We compiled data from multiple smaller-scale camera-trap studies, each designed to experimentally assess mammal responses to fox control. Overall, we collated 5,449 and 2,202 independent detections of foxes and cats, respectively (separated by at least 30 minutes) from 172,052 camera-trap nights (Supporting Information Table \@ref(tab:diel-tab1)). 
+
+We collated camera-trap data across two regions in south-west Victoria, Australia: the Glenelg region and Otway Ranges (Fig. \@ref(fig:diel-map)). Here, dingoes *Canis familiaris* are long-absent throughout, while tiger quolls *Dasyurus maculatus* are long-absent in the Glenelg region and likely functionally extinct in the Otway Ranges (last confirmed sighting in 2014). In broad sections of each region, government land managers conduct ongoing targeted lethal fox control for biodiversity conservation (see sections below for region-specific details). Poison-baits containing 3 mg of sodium fluroacetate (compound 1080) are buried at a depth of 12 - 15 cm at 1-km intervals along accessible forest tracks and roads. Different road densities therefore result in variable densities of poison-baits. Foxes readily dig these poison-baits, whereas it is generally accepted that cats are unlikely to consume buried fox-baits and there is no evidence that buried 1080 fox-baits suppress cat populations [@algar2004feral; @moseby2011use; @risbey1997control; @hunter2018not]. Managers also frequently implement prescribed fire across both regions, primarily to reduce fuel loads to prevent large wildfires.
+
+
+### Glenelg region
+In the Glenelg region, large patches of natural vegetation are fragmented by pastoral farming and residential properties (Fig. \@ref(fig:diel-map)). Foxes in three distinct forest blocks in this region have been subject to poison-baiting since October 2005, with fortnightly bait replacements [@robley2014long]. These forest blocks, along with three similar, unbaited forest blocks to the north have been simultaneously surveyed annually under the 'Glenelg Ark' fox control program since 2005 [40 sites per block, @robley2020glenelg]. Hair-tubes were used to monitor species from 2005 - 2013 [presented in @robley2014long], replaced by camera-traps from 2013; here we present camera-trap data from 2013 - 2019 [@robley2020glenelg]. We also included a further 425 camera-trap deployments at unique locations from early 2018 [M.W.R PhD Surveys', @rees2023data]. This totals 2,039 camera-trap deployments in the Glenelg region, collected in a control-impact experimental design (foxes had been continuously controlled for at 8 - 14 years in the treatment landscapes at the time of these surveys).
+
+### Otway Ranges
+The Otway Ranges is a largely continuous patch of natural vegetation with a strong east-west rainfall gradient (Fig. \@ref(fig:diel-map)). A matrix of cool temperate rainforest and wet forest at high altitudes in the south-west descend into a large heathland directly north, and into dry forests and then heathlands to the north-east. Fox-baiting commenced in small sections of the Otway Ranges in 2008 and large-scale systematic baiting began in 2016 - 2017 under the 'Otway Ark' program [@robley2019otway]. For the first six weeks, poison-baits were replaced weekly, then changing to ongoing monthly bait-replacement. There was a pause in baiting for approximately six months during the second half of 2018. Fox control recommenced in late 2018 with four weeks of fortnightly bait-replacement, before returning to monthly bait-replacement. A large section of the Otway Ranges to the north-west remains unbaited, but is monitored as an experimental non-treatment site [@robley2019otway]. Otway Ark managers survey 372 camera-trap sites annually (sequentially across the region); we present one 'before' baiting survey and two 'after' baiting surveys of each site from 2016 - 2018, totalling 1,113 camera-trap deployments [@robley2019otway]. We also include data from an additional before-after control-impact surveys (one 'before' baiting survey and two 'after' baiting surveys) in the western section of the Otway Ranges, conducted annually 2017 - 2019 [@rees2023data]. This added a further 195 sites and 524 camera-trap deployments (Supporting Information Table \@ref(tab:tab-sum)).
+
+### Camera-trap set-ups
+All camera-trap deployments consisted of a Reconyx (Holmen, Wisconsin) brand camera-trap (white or infrared flash), attached to a tree or a metal picket, facing a lure. All camera-trap sites were positioned in the forest interior at least 30 m away from roads. The Glenelg Ark and Otway Ark fox monitoring programs positioned camera-traps at least 40 cm above ground on a tree or a metal picket and angled downwards toward a lure approximately 1 - 1.5 m away [@robley2020glenelg; @robley2019otway]. The lures consisted of peanut butter, golden syrup and rolled oats mixed into a small ball, placed within a tea strainer or PVC pipe container and secured either to the ground, or 20 - 60 cm above ground on a wooden stake. The M.W.R PhD surveys across both regions positioned camera-traps lower on a tree (around 15 - 30 cm above the ground) angled only slightly downwards toward a tuna oil lure approximately 2 - 2.5 m away [detailed in @rees2023mesopredator]. Camera-traps were active for an average of 47 days (maximum 93 days), totalling 172,052 trap-nights. Camera-trap spacing averaged 867 m for Glenelg Ark, 1246 m for Otway Ark, and 444 m for the M.W.R PhD surveys (Supporting Information Table \@ref(tab:tab-sum)).
+
+## Data preparation
+Analyses were conducted in R version 4.1.3 [@R]. We first used lorelograms to identify the minimum interval to approximate independence [@iannarilli2019lorelograms]; this indicated that discarding repeat detections of a species within 30 minutes was sufficient to reduce temporal autocorrelation. To account for day length variation across space and time, we extracted sunrise and sunset times for each camera-trap deployment using the 'maptools' R-package [@maptools] and adjusted detection times to be relative to sunrise and sunset using the average double anchoring approach described by @vazquez2019comparing. We then built a dataframe consisting of a row for each hour of the day (0 -- 23), for every camera-trap deployment (n = 3,667), recording the total number of 'independent' fox and feral cat detections within each hour across the camera-trap survey.
+
+## Generalised additive models 
+We modelled the total number of independent detections of each predator per hour for each camera-trap deployment (response variable) with generalised additive mixed-effect models implemented in the 'mgcv' R-package [@wood2017generalized]. We used the negative binomial family, as overdispersion, but not zero-inflation, was detected with a poisson distribution using the 'DHARMa' R-package [@DHARMa]. We specified the natural log of the number of survey days as a model offset to account for differences in camera-trap survey duration, and a random intercept for each site to account for repeat sampling for models 2 and 3 (pseudoreplication from repeat sampling in model 1 was explicitly accounted for using the spatial term). For all fox models, we also included a smooth effect of poison-bait density [the number of baits within a 2.3 km radius around each camera-trap - the average maximum distance adult foxes travel from their home-range centre in these regions, @hradsky2017human] with separate responses in each region to account for the effect of fox control effort. Poison-bait density ranged from 0 - 19 baits per 2.3km radius in both the Glenelg and Otway region. Models differed in their specification of the cyclical hour smooth to provide inference on variations of predator diel activity across the three questions of interest - this is detailed in the sections below. We used the 'ggplot2' [@ggplot2] and 'gratia' [@gratia] R-packages to plot models.
+
+In this paper, we use the term 'spatial activity' to refer to the number of 'independent' predator detections at a site (offset to account for survey duration; analogous to an activity or abundance index), and 'diel activity pattern' to refer to fluctuations in relative activity throughout the 24-hour daily cycle. The first two models explore how predator spatiotemporal activity varies across these regions. We used these to inform the best structure for our third model which tested whether the activity of foxes limits the spatiotemporal activity of cats (detailed in the sections below).
+
+### How does predator diel activity patterns vary across geographic space? (model 1)
+To examine how the spatial activity and diel activity patterns of each predator varied across space, we fit a model for each predator which included a tensor product interaction between a spatial smooth (thin plate regression spline) and hourly smooth. This model specification allowed predators to have different activity levels across space (static across the years surveyed), as well as variation in diel activity pattern across space. Space was modelled using camera-trap coordinates and a duchon spline basis [@miller2014finite].
+
+### How does vegetation type and human footprint affect predator activity patterns? (model 2)
+The spatial term in model 1 estimated differences in predator activity across geographic space; we hypothesised that this would be partly due to differences in vegetation type, based both on the observed spatial patterns and because vegetation type is a major driver of understorey habitat structure and prey occurrence in these regions [@swan2015predicting; @hradsky2017bayesian]. We further hypothesised that predators would become relatively more nocturnal with increasing human activity, reflecting temporal avoidance of humans [@gaynor2018influence].
+
+To test whether the diel activity pattern of each predator varied among vegetation types, we identified the Ecological Vegetation Class group [hereafter 'vegetation type' - standard units for vegetation classification in Victoria, @delwp2020bioregions] for each unique camera-trap site, totalling eight vegetation types. As rainforests are interspersed (primarily in low lying gullies) at fine-scales throughout wet and damp forests in the south-eastern Otway Ranges, we merged them together (hereafter referred to as 'wet forests'). We then estimated predator activity across vegetation types using a hierarchical model specification: a global smoother for hour (i.e., average response) and group-level smoothers with shared wiggliness for the seven vegetation types ['model GS' detailed in @pedersen2019hierarchical]. 
+
+To influence of human activity on predator activity patterns, we fit a tensor product interaction term for hour and the human footprint index [@venter2018last]. The human footprint index maps human pressure on environments by considering variables such as human population density, infrastructure and agriculture [@venter2016sixteen].
+
+### Do feral cats avoid foxes in space or time? (model 3)
+Model 2 showed that fox diel activity patterns was mostly uniform among all vegetation types except wet forests. To examine whether cats avoid foxes in space or time, we therefore modelled fox-induced changes in feral cat diel activity separately for wet forest and dry vegetation types. We examined responses in dry vegetation types by region for further replication. We refer to the resulting variable as 'habitat type', which had three levels: (i) wet forests and rainforests in the western Otway Ranges ('wet_otways'), (ii) dry vegetation types in the Otway Ranges ('dry_otways') and (iii) dry vegetation types in the Glenelg region ('dry_glenelg'). We hypothesised that cats would avoid foxes in time by becoming more diurnal in dry vegetation types where foxes were mostly nocturnal, but not in wet forests where foxes were more consistently active throughout the 24-hour period. 
+
+To investigate changes in feral cat diel activity across the range of observed fox activity, we first quantified fox activity for each camera trap deployment as the total number of fox detections for the deployment divided by the number of survey days, to adjust for differences in survey duration (hereafter 'adjusted fox counts'). We modelled an interaction between hour and adjusted fox counts (as a thin plate regression spline with shrinkage - complexity penalties could entirely remove this effect from the model if not supported), allowing cats to have nonlinear responses to both hour and adjusted fox counts. We fit separate tensor product interactions for each habitat type (using a 'by-variable' term). For a direct visual comparison to fox activity, we fit another fox model where a diel activity curve was estimated separately across each of the three habitat types.
+
+\newpage
+
+(ref:fig1cap) Locations of our study regions in south-west Victoria, Australia. The grids of camera-traps are denoted by white dots. The Glenelg region (38°05'54"S 141°44'41"E) is to the west and Otway Ranges (38°57'82"S 141°68'41"E) to the east. Native vegetation is indicated by dark green, with hill shading. *Map tiles by Stamen Design, under CC BY 3.0, map data by OpenStreetMap, under CC BY SA.*. 
+
+
+```{r diel-map, fig.cap = '(ref:fig1cap)'}
+knitr::include_graphics("map_cams.png")
+```
+
+\newpage
+
+# RESULTS
+
+## Lethal suppression of foxes  
+In all fox models, the density of poison-baits had a strong negative association with fox spatial activity (Supporting Information Fig. \@ref(fig:fox-baits)). In the absence of baiting, fox spatial activity was substantially higher in the Glenelg region than the Otway Ranges. Baiting had a stronger effect on fox spatial activity in the Glenelg region, likely reflecting differences in baiting intensity. Across the observed range of bait densities, fox counts on the response scale were predicted to be reduced by 91% - 96% in the Glenelg region, and 87% - 93% in the Otway Ranges across the three models. For example, model 2 predicted fox counts in the Glenelg region to decline from 0.097 (95% CI: 0.077 - 0.122) in sites without fox-baiting to 0.004 (95% CI: 0.002 - 0.012) at sites with the maximum poison-bait density, while fox counts in the Otways declined from 0.041 (95% CI: 0.033 - 0.05) at unbaited sites to 0.008 (95% CI: 0.003 - 0.020) at the maximum bait density.
+
+## How does predator diel activity patterns vary across geographic space? (model 1)
+Predator activity varied considerably across space and throughout the 24-hour daily cycle. Both predators had similar average diel activity patterns: on average, their activity peaked around sunrise and sunset (i.e., crepuscular), they tended to be more active during the early evening than at sunrise, and their activity was lowest during the middle of the day (Fig. \@ref(fig:diel-st-int)i). The main differences in average activity between the species were that fox activity peaked a couple of hours after sunset, whereas cat activity peaked at sunset, and foxes were less likely to be active during the day than cats (Fig. \@ref(fig:diel-st-int)i).
+
+In addition, there was considerable spatial variation in the diel activity of each predator (away from these average patterns). The interaction between hourly and spatial smooths revealed deviations from marginal diel activity pattern in space across and within (particularly within the Otway Ranges) the two regions (Fig. \@ref(fig:diel-st-int)). For example, foxes were less diurnal in the Glenelg region and the north-east of the Otway Ranges (i.e., a negative partial effect at midday) and much more strongly diurnal across the southern Otway Ranges, relative to their average diel activity pattern (Fig. \@ref(fig:diel-st-int)a). Cats had slightly more complex (i.e., wiggly) deviations in space from their average diel activity pattern than foxes. Most notably, cats were more active than average at midnight and less active than average at sunset in the Otway Ranges; the opposite was true in the Glenelg region (Fig. \@ref(fig:diel-st-int)b).
+
+## How does vegetation type and human footprint affect predator activity patterns? (model 2)
+Vegetation type had a strong influence on the spatial and diel activity patterns of foxes and cats. Spatial levels of fox activity were similar across all vegetation types, except wet forests where fox activity was considerably lower (Fig. \@ref(fig:diel-veg)a). Spatial cat activity was relatively more variable across vegetation types; lowest in heathy woodlands and highest in wet forests (Fig. \@ref(fig:diel-veg)b). Diel activity patterns for foxes were similar across all vegetation type except wet forests; in wet forests, foxes were consistently active throughout the daily cycle (Fig. \@ref(fig:diel-veg)a). On the other hand, cats were mostly nocturnal (and most active) in wet forests, but largely crepuscular in all other vegetation types (Fig. \@ref(fig:diel-veg)a).
+
+In contrast, there was no evidence that the human footprint index was associated with the diel activity pattern of either predator species: the interaction term between hour and human footprint index was removed from both models. Further, fox spatial activity increased linearly with the human footprint index (Supporting Information Fig. \@ref(fig:fox-hfi)), but cat spatial activity showed no relationship with the human footprint index (the marginal effect of human footprint was also removed from the cat model). 
+
+## Do feral cats avoid foxes in space or time? (model 3)
+The model indicated that cats avoided foxes temporally rather than spatially (Fig. \@ref(fig:diel-cat-fox)). Fox activity did not impact spatial cat activity in the Otway Ranges, while cat spatial activity slightly increased with adjusted fox counts in the Glenelg region.
+
+Across all habitat types, feral cat diel activity patterns changed across gradients of fox activity. In the Glenelg region and Otway dry habitat types, feral cats had a nocturnal-crepuscular diel activity pattern where fox activity was low, but were most active during the day where fox activity was high. In contrast, in the wet forests of the Otway Ranges, feral cats were more strongly nocturnal when fox activity was high, avoiding dawn in particular (Fig. \@ref(fig:diel-cat-fox)).
+
+
+\newpage
+
+```{r diel-st-int, out.width = "70%", fig.cap = "Marginal diel activity (i.e., average; i) and space-time interaction effect in the Glenelg region (ii) and Otway Ranges (iii) at midnight (0), sunrise (6), midday (12) and sunset (18) times for introduced red foxes \\textit{Vulpes vulpes} and feral cats \\textit{Felis catus}. Negative partial effects in ii and iii (blue shades) indicate that the predator was less active in these areas than the estimated marginal diel activity pattern (i), while red shades indicate higher activity than the marginal diel activity pattern. These effects were estimated by a Generalised Additive Model with a tensor product interaction between spatial and hourly smooths, fit to camera-trap data ('model 1'). Dotted, vertical lines represent average sunrise and sunset times, shaded areas indicate 95\\% confidence intervals (i); black dots depict camera-trap sites (ii; iii)."}
+knitr::include_graphics("spatial_interaction.png")
+
+```
+
+\newpage
+
+```{r diel-veg, fig.cap = "Red fox \\textit{Vulpes vulpes} (a) and feral cat \\textit{Felis catus} (b) diel activity patterns overall (i) and across different Ecological Vegetation Class (EVC) groups (ii, iii) in south-west Victoria, Australia. These effects were estimated by a hierarchical Generalised Additive Model with a global smoother for hour (i.e., average response) and group-level smoothers with shared wiggliness for vegetation type (EVC groups), fit to camera-trap data ('model 2'). Panels i and ii in Fig. 3 show the partial effects of each smooth as implemented in the GAM (which can interpreted as log odds ratios; conditional on the other estimated model terms), while Panel iii shows the sum of the partial effects in Panels i and ii, including the intercept. Dotted, vertical lines represent average sunrise and sunset times. Shaded areas indicate 95\\% confidence intervals. Both invasive predators had a crepuscular to nocturnal diel activity pattern on average, with slight deviations across the drier EVC groups and large deviations in wet forests (ii; wet forests shown as pink line). The overall level of activity was relatively consistent across EVC groups for foxes (a – iii), whereas it differed substantially for feral cats (b - iii)."}
+knitr::include_graphics("predator_veg_leg.png")
+```
+
+\newpage
+
+```{r diel-cat-fox, fig.cap="Red fox \\textit{Vulpes vulpes} diel activity patterns (a), as well as variation in feral cat \\textit{Felis catus} diel activity patterns in response to counts of 'independent' fox detections (log-transformed and survey effort adjusted) across each habitat type in south-west Victoria, Australia (b; c). Effects were estimated by a Generalised Additive Model with a tensor product interaction between hour (cyclical spine) and fox counts adjusted for survey length at each camera-trap ('fox activity'; 'model 3'), fit to camera-trap data. Panels B and C present the same model in two different ways: (b) cat diel activity across the entire continuum of fox activity, (c) cat diel activity patterns at the minimum and maximum fox activity, with associated 95\\% confidence intervals (shaded bands). Grey vertical lines represent average sunrise and sunset times. In the Glenelg region, there were more feral cat detections where there were more fox detections, but cat peak diel activity shifted from crepuscular night to pre-dawn and midday (a). In the Otway Ranges, feral cat activity also peaked during the day where fox activity was high in dry vegetation types (b), but was more nocturnal where fox activity was high in the rainforests and wet forests (c)."}
+knitr::include_graphics("cat_fox_count.png")
+```
+
+\newpage
+ 
+# DISCUSSION
+A key question in ecological theory is whether animals are evolutionarily hardwired to occupy particular temporal niches, or have circadian rhythms that are responsive to changing environmental conditions and interactions with other species [@daan1981adaptive; @schoener1974compression; @lima1990behavioral]. Here we demonstrate that predator diel activity patterns are not fixed, but vary across space based on landscape context and fear. In our study, sympatric invasive predators had similar diel activity patterns when averaged across broad regions [i.e., high circular overlap, as did @roshier2021space], but behaviours varied considerably within landscapes. Within broad habitat types, cats altered their diel activity patterns at sites with higher fox activity towards less-risky times of day (i.e., times when fox activity was lower), however we found no signs of foxes suppressing cat spatial activity (Fig. \@ref(fig:diel-cat-fox)). Lethal control programs that reduce invasive fox activity may therefore shift cat diel activity patterns, which in turn may alter cat impacts on native prey species. Quantifying changes in diel activity patterns provides important context for understanding species interactions, which is key for effective ecosystem management [@gaynor2021applied].
+
+Shifting diel activity patterns may facilitate spatial coexistence of dominant and subordinate species [@carothers1984time]. For cats, radically altering diel activity patterns to less-preferred times of day may be worthwhile to persist in high-quality habitat. An increasing number of studies have documented changes in the magnitude of diel activity peaks of subordinate species in response to dominant predators [e.g., @cunningham2019temporal; @crawford2021predation], but few studies have demonstrated predator-induced reversals in diel activity patterns [@kronfeld2003partitioning], as we observed among cats in the dry habitat types of our study landscapes. Notably, ship rats *Rattus norvegicus* were also found to switch from nocturnal to diurnal behaviour in response to fox activity [@fenn1995use], as did American mink *Neovison vison* following the recolonisation of native predators [@harrington2009impact]. Our study is unique in that we documented this behaviour across two separate replicate regions with experimental manipulation, although there was considerable uncertainty in cat diel activity patterns where fox activity was highest (because there were fewer sites with high fox activity than low fox activity).
+
+For cats in the dry vegetation types, a switch to diurnal behaviour where fox activity was high  may have been facilitated by the relatively high abundance of reptiles in this habitat type, compared to wet forests [reptiles are mostly diurnal, @woinarski2018reptiles]. In contrast, at wet forest sites with high fox activity, cats concentrated their activity away from sunrise and sunset towards midnight. An diurnal shift in wet forests would potentially result in a similar reduction in the risk of fox encounter, but increasing activity at night instead is likely be more favourable, because small mammals are most active at night and cats would be least visible to foxes [cats here mostly had black or grey coats, @rees2023mesopredator]. Further, spatial fox activity was twice as low in the wet forests relative to dry habitat types, and so cats were likely under less pressure to radically alter their diel activity patterns here. Understanding how these potential avoidance behaviours impacts native prey is a key research priority to improve invasive predator management. Mesopredators need to be highly adaptable to minimise top predator encounters while simultaneously maximising prey encounters; flexible diel activity patterns could be key strategy to achieve this trade-off across broad landscapes.   
+
+Cats appeared to avoid foxes in time, but we saw no evidence of spatial avoidance (i.e., no fine-scale negative association between fox and cat spatial activity). In fact, there was some evidence that cat and fox spatial activity was positively correlated in the Glenelg region, suggesting temporal partitioning may facilitate high predator co-abundance in quality habitat. Nonetheless, cats may have still avoided foxes spatially but transiently, on the scale of hours to days, or at finer spatial scales than most camera-trap studies can detect [and which telemetry studies can highlight, e.g., @kohl2019prey; @smith2019integrating]. Short-term spatial avoidance is plausible given foxes mark territories using scats and odours, which cats could associate with short-term increases in risk. Subordinate predators may prefer temporal avoidance of dominant predators (changing diel patterns or transient site avoidance) over longer-term site avoidance when both species have similar resource requirements and share many prey species.
+
+Many species increase nightly activity to avoid humans [@gaynor2018influence; @van2023influence], however we found no effect of human footprint on the diel activity of either predator. A telemetry study has shown that that foxes in our study region often select for human-modified habitat features, such as roads and urban areas, particularly during the night [@hradsky2017human]. The mismatch between the diel effect observed in the telemetry study and our results could reflect the relatively low and consistent amount of human activity among our sites; our camera-trap sites were all located within conservation reserves and encompassed only the lower 32% of the total human footprint index range. On the other hand, we did detect a strong, positive effect of human footprint on spatial fox activity [similar to @hradsky2017human]. We found no evidence human activity impacted cats&mdash;subordinate predators may prefer to avoid dominant (animal) predators over humans, even when this decision leads to higher mortality rates [@prugh2023fear].
+
+One strength of our study is that we modelled potential avoidance behaviours in a simple predator guild, where dominant predator activity was artificially manipulated through lethal control. The simple predator guild reduced bias from unmodelled impacts of other predators in the system [@levi2012wolves]. Artificial suppression of the dominant predator allowed us to better infer the effects of species interactions, separate from  underlying differences in niche preferences of the two predator species. We also included replication across different habitat types. However, because our study did not consider associations with prey species, we could not distinguish whether changes in cat diel activity patterns were the result of direct fox avoidance or indirect associations with shared prey. For example, low fox activity may promote the availability of a preferred shared prey species with a diel pattern which differs from those of cats on average, and as a result, cats might shift diel activity patterns at sites with low fox activity to more closely match those of the more abundant prey species. We would expect introduced European rabbits *Oryctolagus cuniculus* and hares *Lepus europaeus* (which are diurnal) to be particularly likely to induce such a response in dry vegetation types [@stobo2020management; @mcgregor2020short], however, rabbits and hares are rare within the natural vegetation of the landscapes we surveyed (only ever being detected at 40 of 1,232 sites) and there is little evidence that predation by foxes suppresses rabbit populations [@norbury2015pests; @scroggie2018invasive]. 
+
+Adaptable antipredator behaviours make evolutionary sense but have been rarely demonstrated in terms of spatiotemporal predator avoidance, because this often requires manipulative experiments or at least more complicated statistical models [although see @relyea2003predators; @brown2013phenotypically; @cunningham2019temporal]. Our study demonstrates that GAMs offer a powerful tool for modelling continuous shifts in animal activity across both space and time, as they are capable of capturing complex interactions and sharing information across categorical variables. Furthermore, complexity penalties in GAMs are particularly beneficial for assessing spatiotemporal responses, reducing spurious estimates due to small sample sizes or noisy data. Complexity penalties also allow multiple hypotheses to be tested within one model without post-hoc significance testing. For example, our model specification for 'model 3' allowed us to simultaneously test whether cats respond to differences in fox activity with non-linear or linear shifts in their spatial and/or diel activity patterns. Importantly, GAMs implemented in the 'mgcv' package have a relatively low entry barrier for ecologists familiar with generalised linear models, allowing ready access to complex and flexible spatiotemporal models [@wood2017generalized].
+
+The alternative approach of simply comparing average diel activity overlap between two species [@ridout2009estimating] would have been misleading for two reasons. Firstly, 'baseline' predator diel activity patterns varied 'naturally' across our heterogeneous landscapes (requiring avoidance to be tested in wet forests and dry vegetation types separately, Fig. \@ref(fig:diel-veg)). Secondly, temporal avoidance strategies were not consistent, but depended on the level of spatial activity of the dominant predator and the habitat type (Fig. \@ref(fig:diel-cat-fox)). Our GAM framework for modelling spatiotemporal activity can be used on any species with time-stamped detections, including datasets with categorical or continuous covariates and hierarchical groupings. However, like many other spatiotemporal approaches such as time-to-encounter models, a key limitation is that our GAM approach did not separate the observation processes from the state process. Integrating GAM-like functions into recently developed multispecies spatiotemporal models [e.g., @kellner2022two] would be highly advantageous. 
+
+Animal diel activity patterns can be complex, varying across space, habitat types and threat-levels [@mccann2017temporal]. Despite telling an important story about how animals interact with each other and the environment, detection times are commonly discarded from statistical analyses of camera-trap data. When considered, diel activity patterns are predominantly estimated at the population-level, overlooking finer-scale behaviours that can affect fitness, survival and ecosystem-impacts. Our results demonstrate the importance of (a) considering diel activity in regards to species interactions, (b) modelling changes in animal behaviour rather than overlap with other species, and (c) testing avoidance behaviours within a joint spatiotemporal framework. Our study adds to the growing body of evidence that dominant predators may cause fear that is powerful enough to reverse the diel activity patterns of subordinate species [@kronfeld2003partitioning], and crucially demonstrates that these effects are habitat-dependent.
+
+\newpage
+
+
+# ACKNOWLEDGEMENTS {.unnumbered}
+
+We acknowledge and pay respects to the Gunditjmara and Eastern Maar peoples whose traditional
+lands this study took place. We thank Nick Golding who helped inspire the approach of this paper and provided statistical
+advice. We are grateful to Alan Robley, the Department of Environment, Land, Water, and Planning
+(DELWP) Heywood team and Parks Victoria West Coast District Team for sharing camera-trapping datasets.
+The M.W.R PhD surveys were conducted with the assistance of many fieldwork volunteers, under the
+University of Melbourne Animal Ethics Committee approval 1714119.5 and Victorian Government DELWP
+Research Permit 10008273. This study was generously supported by the Conservation Ecology Centre, the
+Victorian Government DELWP, Parks Victoria, Holsworth Wildlife Research Endowment – Equity Trustees
+Charitable Foundation and Ecological Society of Australia, Australian Research Council Linkage Project
+LP170101134, and the Australian Government’s National Environmental Science Program through the
+Threatened Species Recovery Hub. M.W.R also received funding from an Australian Government Research
+Training Program Scholarship and a Victorian Government DELWP top-up scholarship.
+
+# DATA AVAILABILITY {.unnumbered}
+
+Data and code available from the Dryad Digital Repository https://doi.org/10.5061/dryad.msbcc2g4p [@rees2023data].
+
+# REFERENCES {.unnumbered}
+
+::: {#refs}
+:::
+
+```{=tex}
+\newpage
+\beginsupplement
+\setcounter{page}{1}
+```
+# SUPPORTING INFORMATION {.unnumbered}
+
+\newpage
+
+
+```{r diel-tab1}
+
+# load records
+records <- read_csv("/Users/ree140/Dropbox/personal/matt/github/phd-thesis/index/data/diel/counts_hour_cleaned.csv")
+# drop hour
+records <- distinct(records, station_year, .keep_all = TRUE)
+# get unique sites dataframe
+camdata <- distinct(records, station, .keep_all = TRUE)
+
+table1 <- records %>%
+ group_by(region, vegetation_group) %>%
+ mutate(sites = length(unique(station)),
+     deployments = length(unique(station_year)),
+     fox_count_vr = sum(fox_count),
+     cat_count_vr = sum(cat_count),
+     fox_present = sum(fox_pa == "present"),
+     cat_present = sum(cat_pa == "present")
+     )
+
+table1 <- table1 %>%
+ dplyr::select(vegetation_group, region, sites, deployments, fox_count_vr, cat_count_vr) %>% 
+ distinct() %>%
+ arrange(vegetation_group, region)
+
+# get sums for total row
+total <- colSums(Filter(is.numeric, table1))
+# add to df
+table1 <- rbind(table1, total)
+table1[14,1] <- "Total"
+table1[14,2] <- ""
+
+# rename region 
+table1$region <- factor(table1$region)
+table1$region <- gsub("glenelg", "Glenelg", table1$region)
+table1$region <- gsub("otway", "Otway", table1$region)
+
+# remove repeat vegetation name
+table1[c(2, 4, 6, 8, 10, 12),1] <- ""
+
+# make table
+kbl(table1, longtable = T, booktabs = T, digits = 2,
+  caption = "Summary of the number of camera-trap deployments, unique survey sites and 'independent' counts of invasive predator detections across Ecological Vegetation Class groups within the Glenelg and Otway regions, south-west Victoria, Australia.",
+   col.names = c("Vegetation", "Region", "Sites", "Deployments", "Fox counts", "Cat counts")) %>% 
+  kable_styling(font_size = 10) %>% 
+  row_spec(14, bold = T) 
+
+```
+
+\newpage
+
+
+```{=tex}
+\newpage
+\blandscape
+```
+
+```{r tab-sum}
+
+cam_dist <- read.csv("../raw_data/survey_summary_distances.csv")
+
+cam_dist <- select(cam_dist, !c(X, sess))
+
+#cam_dist2 <- cam_dist %>%
+#  group_by(data_source) %>%
+#  mutate(mean = mean(mean_mindist))
+
+cam_dist <- arrange(cam_dist, region, data_source, treatment)
+
+# make table
+kbl(cam_dist, booktabs = T, longtable = F, digits = 0,
+  caption = "Summary of experimental camera-trap survey designs around fox control in south-west Victoria, Australia.",
+   col.names = c("Region", "Source", "Block", "Treatment", "Surveys", "Year from", "Year to", "Sites", "Min. spacing (m)", "Mean spacing (m)", "Max spacing (m)")) %>% 
+  kable_styling(font_size = 10, latex_options = "scale_down") 
+```
+
+
+```{=tex}
+\thispagestyle{empty}
+\elandscape
+\newpage
+```
+
+
+
+```{r diel-tab-fits}
+
+# load records
+fits_summaries <- read_csv("../derived_data/model_summaries.csv") %>%
+  dplyr::select(-c(...1))
+
+# make table
+kbl(fits_summaries, longtable = T, booktabs = T, digits = 4,
+  caption = "Generalised additive model summaries for invasive predator spatiotemporal activity in south-west Victoria, Australia.",
+     col.names = c("Species", "Model", "EDF", "dev.expl", "r.sq")) %>% 
+  kable_styling(font_size = 10) %>% 
+  footnote(general = c("EDF - estimated degrees of freedom of all model terms.",
+                       "dev.expl - proportion of the null deviance explained by the model. ",
+                       "r.sq -  adjusted r-squared value."))
+
+```
+
+\newpage
+
+```{r fox-baits, fig.cap = "Effects of 1080 poison-bait density on the spatial activity of red foxes \\textit{Vulpes vulpes}, derived from each model (model 1: spatial, model 2: vegetation group / human footprint, model 3: habitat type). Shaded areas indicate 95\\% confidence intervals."}
+knitr::include_graphics("foxbaiting_effects.png")
+```
+
+\newpage
+
+
+```{r fox-hfi, fig.cap = "Effects human footprint index on the spatial activity of red foxes \\textit{Vulpes vulpes}. (model 2). The interaction effect of human foot print and fox diel activity pattern was removed from this model. Both the marginal and interactive effect of human footprint was removed for feral cats \\textit{Felis catus}). Shaded areas indicate 95\\% confidence intervals."}
+knitr::include_graphics("fox_hfi.png")
+```
+
